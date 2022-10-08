@@ -1,0 +1,217 @@
+@import "~vuetify/src/styles/styles.sass";
+@import "@/assets/scss/variables.scss";
+
+@font-face {
+    font-family: "Cookie";
+    src: url("~assets/fonts/Cookie-Regular.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "Shrikhand";
+    src: url("~assets/fonts/Shrikhand-Regular.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "RocknRollOne";
+    src: url("~assets/fonts/RocknRollOne-Regular.ttf") format("truetype");
+}
+
+html {
+    color: $text-color-primary;
+    letter-spacing: 1.5px;
+    box-sizing: border-box;
+}
+
+a,
+a:hover,
+a:active,
+a:visited {
+    color: $text-color-primary !important;
+    text-decoration: none;
+}
+
+ul {
+    list-style-type: none;
+}
+
+.application {
+    font-family: "RocknRollOne";
+}
+
+.v-application {
+    background-color: #e14444 !important;
+}
+
+.v-application ul {
+    padding: 0 !important;
+}
+
+.v-footer {
+    background-color: transparent !important;
+}
+
+.v-toolbar__content {
+    padding: 0px !important;
+}
+
+.u-container {
+    height: calc(100% - 54px);
+    max-width: $container-max-width;
+    margin: 0 20px;
+    position: relative;
+    border-radius: 12px;
+    background-color: #fff;
+    transition: $res-transition;
+    transition-timing-function: $res-transition-timing;
+
+    @media #{map-get($display-breakpoints, 'md-and-up')} {
+        margin: 0 60px;
+    }
+
+    @media (min-width: $container-bp) {
+        margin: 0 auto;
+    }
+}
+
+.nav {
+    color: #fff;
+    font-family: "shrikhand";
+
+    &__list {
+        display: flex;
+        justify-content: center;
+        padding: 0;
+    }
+
+    &__list-item {
+        .active {
+            color: #333;
+            background-color: #fff;
+            transition: color 1000ms;
+            transition-timing-function: color $res-transition-timing;
+        }
+    }
+
+    &__btn {
+        padding: 15px 20px;
+        position: relative;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+    }
+}
+
+.tabs {
+    height: 100%;
+    padding: 0;
+
+    &__item {
+        padding: 40px;
+        height: 100%;
+        transition: $res-transition;
+        transition-timing-function: $res-transition-timing;
+        overflow-x: auto;
+
+        @media #{map-get($display-breakpoints, 'md-and-up')} {
+            padding: 80px 120px;
+        }
+    }
+}
+
+.form {
+    &__label {
+        font-size: 1rem;
+        font-family: "RocknRollOne";
+    }
+
+    &__input {
+        width: 100%;
+    }
+
+    @media (min-width: 1200px) {
+        width: calc(100% - 500px);
+    }
+}
+
+.section {
+    &__title {
+        @include sectionTitle(1.8rem);
+        margin-top: 24px;
+        margin-bottom: 30px;
+
+        &--two-line {
+            @include sectionTitle(1.8rem);
+            margin-bottom: 30px;
+        }
+
+        &--sub {
+            @include sectionTitle(0.7em);
+        }
+    }
+
+    &__img-outer {
+        width: 80%;
+        max-width: 400px;
+        margin-right: 0;
+        margin-left: auto;
+        margin-bottom: 30px;
+    }
+
+    &__img {
+        width: 100%;
+    }
+
+    &__text {
+        font-family: "RocknRollOne";
+    }
+
+    &__btn {
+        margin-top: 40px;
+        color: #ffffff !important;
+        font-family: "RocknRollOne";
+    }
+
+    @media #{map-get($display-breakpoints, 'md-and-up')} {
+        &__text {
+            font-size: 1.125rem;
+        }
+
+        &__title {
+            @include sectionTitle(2.4rem);
+            margin-top: 32px;
+            margin-bottom: 20px;
+
+            &--two-line {
+                @include sectionTitle(2.4rem);
+            }
+        }
+    }
+
+    @media (min-width: 1200px) {
+        &__title {
+            margin-top: 45px;
+            margin-bottom: 30px;
+            font-size: 3.4rem;
+
+            &--two-line {
+                font-size: 3.4rem;
+                margin-bottom: 30px;
+            }
+
+            &--sub {
+                font-size: 0.7em;
+            }
+        }
+
+        &__img-outer {
+            max-width: 500px;
+            margin-bottom: 0;
+            position: absolute;
+            right: 20px;
+            bottom: 100px;
+        }
+
+        &__text {
+            max-width: 400px;
+        }
+    }
+}

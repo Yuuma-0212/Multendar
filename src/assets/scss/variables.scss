@@ -1,0 +1,31 @@
+$container-max-widths: (
+  "xl": 1100px,
+);
+
+$container-bp: 1240px;
+$container-max-width: 1100px;
+$font-common: "Sawarabi+Gothic serif";
+$font-logo: "Cookie";
+$text-color-primary: #333333;
+$text-color-secondary: #ffffff;
+$border: 2px solid #afafaf;
+$res-transition: 300ms;
+$res-transition-timing: ease-in-out;
+
+@mixin navSubTitle($name) {
+  content: $name;
+  margin-bottom: 5px;
+  font-size: 10px;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+@mixin sectionTitle($font-size) {
+  color: #f73e9b;
+  font-size: $font-size;
+  font-family: "Shrikhand";
+  line-height: 0.9;
+}
