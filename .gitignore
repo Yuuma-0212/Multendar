@@ -67,3 +67,27 @@ node_modules/
 
 # firebase-admin
 src/utils/weather-schedule-66b14-firebase-adminsdk-03da8-1d971c12df.json
+
+# nuxt.js build output
+.nuxt
+
+# Nuxt generate
+dist
+
+# vuepress build output
+.vuepress/dist
+
+# Serverless directories
+.serverless
+
+# IDE / Editor
+.idea
+
+# Service worker
+sw.*
+
+# macOS
+.DS_Store
+
+# Vim swap files
+*.swp
