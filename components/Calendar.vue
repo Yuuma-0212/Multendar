@@ -922,6 +922,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "~vuetify/src/styles/styles.sass";
+@import "~/assets/scss/variables.scss";
 
 @mixin event-detail-text($white-space) {
   font-size: 0.875rem;
