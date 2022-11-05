@@ -20,14 +20,16 @@ steps:
     npm run build
   displayName: 'npm install and build'
 
+#|
+#      .nuxt/**
+#      static/**
+#      package.json
+#      nuxt.config.js
+
 - task: CopyFiles@2
   inputs:
     SourceFolder: '$(System.DefaultWorkingDirectory)'
-    Contents: |
-      .nuxt/**
-      static/**
-      package.json
-      nuxt.config.js
+    Contents: '**'
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
 - task: ArchiveFiles@2
