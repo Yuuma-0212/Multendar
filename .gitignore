@@ -88,3 +88,6 @@ sw.*
 
 # Vim swap files
 *.swp
+
+# Vim swap files
+*.swp
