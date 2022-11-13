@@ -1,3 +1,7 @@
+require('dotenv').config();
+const { API_KEY, AUTH_DOMAIN, PROJECT_ID, STORAGE_BUCKET, MESSAGING_SENDER_ID, APP_ID, MEASUREMENT_ID, PUBLIC_VAPID_KEY} = process.env
+
+
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -83,7 +87,6 @@ export default {
     }
   },
 
-   /*
   env: {
     API_KEY,
     AUTH_DOMAIN,
@@ -95,7 +98,6 @@ export default {
     PUBLIC_VAPID_KEY,
     MAPS_API_KEY: process.env.MAPS_API_KEY
   },
-  */
 
   serverMiddleware: ['~/api']
 }
