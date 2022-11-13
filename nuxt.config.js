@@ -32,7 +32,7 @@ export default {
     '~/plugins/firebase.js',
     '~/plugins/firebase-auth.js',
     '~/plugins/firebase-firestore.js',
-    '~/plugins/vuex-persistedstate.js',
+    //'~/plugins/vuex-persistedstate.js',
     '~/plugins/router.js',
     '~/plugins/areas.js',
     '~/plugins/gmap-vue.js',

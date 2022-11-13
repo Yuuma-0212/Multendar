@@ -613,6 +613,9 @@ import GmapAc from "~/components/GmapAc.vue";
 export default {
   components: { Contact, Gmap, GmapAc },
   name: "Calendar",
+  async fetch() {
+
+  },
   data: () => ({
     focus: null,
     type: "month",
@@ -686,8 +689,14 @@ export default {
     this.$refs.calendar.checkChange();
     this.cWindowW = window.innerWidth;
 
+    window.addEventListener("resize", () => {
+      this.cWindowW = window.innerWidth;
+    });
+  },
+  async created() {
+    this.areas = areas;
+
     // 天気予報を取得
-    // vuex-persistedstateのトリガーがmounted以降のためfetchでは取得できない
     const selectedArea = JSON.parse(this.$store.getters.getSelectedArea);
     if (selectedArea !== null) {
       const forecast = await this.$axios.$get(
@@ -715,13 +724,6 @@ export default {
       }
     );
     this.dateToday = dateToday;
-
-    window.addEventListener("resize", () => {
-      this.cWindowW = window.innerWidth;
-    });
-  },
-  created() {
-    this.areas = areas;
   },
   methods: {
     viewDay(date) {
@@ -915,7 +917,8 @@ export default {
         }
       );
 
-      this.$store.dispatch("setSelectedArea", JSON.stringify(event));
+      //this.$store.dispatch("setSelectedArea", JSON.stringify(event));
+      this.$cookies.set("selectedArea", JSON.stringify(event));
       this.isLoadingSelectedArea = false;
       this.forecastWeek = forecast.week;
       this.forecastHour = forecast.hour;

@@ -37,10 +37,16 @@ export const mutations = {
 
 export const actions = {
     async nuxtServerInit({ state, dispatch }, { app, req, res, redirect }) {
-        // クッキーからトークンを取得してストアに保持
+        let selectedArea = ""; 
+        // クッキーからデータを取得してストアに保持
         if (req.headers.cookie) {
             const cookie = Cookie.parse(req.headers.cookie);
-            const vuex = JSON.parse(cookie.vuex);
+            //const vuex = JSON.parse(cookie.vuex);
+            selectedArea = cookie.selectedArea;
+            const vuex = {
+                uid: cookie.uid,
+                idToken: cookie.idToken,
+            }
 
             await getEvents({ uid: vuex.uid }).then((result) => {
                 // イベント取得
@@ -64,6 +70,7 @@ export const actions = {
         if (state.idToken) {
             const isLogin = true;
             dispatch("setIsLogin", isLogin);
+            dispatch("setSelectedArea", selectedArea);
             redirect("/calendar");
         } else {
             redirect("/");

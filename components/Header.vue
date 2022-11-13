@@ -33,8 +33,8 @@ export default {
       login()
         .then((user) => {
           this.isLogin = true;
-          this.$store.dispatch("setUid", user.uid);
-          this.$store.dispatch("setToken", user.idToken);
+          this.$cookies.set("uid", user.uid);
+          this.$cookies.set("idToken", user.idToken);
           this.$router.push({ path: "/calendar" });
           this.$toast.success("ログインしました。ようこそ！", {
             position: "top-right",
@@ -51,7 +51,7 @@ export default {
       logout()
         .then(() => {
           this.isLogin = false;
-          this.$cookies.remove("vuex"); // cookie削除
+          this.$cookies.removeAll(); // cookie削除
           this.$toast.success("ログアウトしました", {
             position: "top-right",
           });
