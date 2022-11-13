@@ -32,10 +32,10 @@ steps:
     Contents: |
       .nuxt/**
       static/**
-      functions
+      functions/**
       firebase.json
-      firebase.indexes.json
-      firebase.rules
+      firestore.indexes.json
+      firestore.rules
       package.json
       nuxt.config.js
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
