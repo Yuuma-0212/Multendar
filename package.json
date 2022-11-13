@@ -20,7 +20,6 @@
     "cookie-universal-nuxt": "^2.2.2",
     "core-js": "^3.25.3",
     "express": "^4.18.1",
-    "fibers": "^5.0.1",
     "firebase": "^9.11.0",
     "gmap-vue": "^3.5.4",
     "js-cookie": "^3.0.1",
