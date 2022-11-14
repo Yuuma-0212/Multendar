@@ -25,6 +25,7 @@
     "js-cookie": "^3.0.1",
     "nuxt": "^2.15.8",
     "nuxt-fontawesome": "^0.4.0",
+    "nuxt-start": "^2.15.8",
     "vue": "^2.7.10",
     "vue-server-renderer": "^2.7.10",
     "vue-swatches": "^2.1.1",
@@ -38,7 +39,6 @@
     "@nuxtjs/style-resources": "^1.2.1",
     "@nuxtjs/vuetify": "^1.12.3",
     "fibers": "^5.0.1",
-    "nuxt-start": "^2.15.8",
     "sass": "~1.32",
     "sass-loader": "^10.1.1"
   }
