@@ -33,7 +33,7 @@ steps:
 - task: CopyFiles@2
   inputs:
     SourceFolder: '$(System.DefaultWorkingDirectory)'
-    Contents: #|
+    Contents: |
       .nuxt/**
       static/**
       package.json
