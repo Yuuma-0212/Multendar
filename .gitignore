@@ -91,3 +91,6 @@ sw.*
 
 # Vim swap files
 *.swp
+
+# firebase-admin
+weather-schedule-66b14-firebase-adminsdk-03da8-cd09df0bd8.json

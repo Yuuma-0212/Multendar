@@ -1,14 +1,13 @@
-import functions from "firebase-functions";
-import admin from "firebase-admin";
-import { getFirestore } from "firebase-admin/firestore";
-import { getAuth } from "firebase-admin/auth";
-//const functions = require("firebase-functions");
-//const admin = require("firebase-admin");
-//const { getFirestore } = require("firebase-admin/firestore");
-//const { getAuth } = require("firebase-admin/auth");
+//import functions from "firebase-functions";
+//import admin from "firebase-admin";
+//import { getFirestore } from "firebase-admin/firestore";
+//import serviceAccount from "./weather-schedule-66b14-firebase-adminsdk-03da8-cd09df0bd8.json";
+const functions = require("firebase-functions");
+const admin = require("firebase-admin");
+const { getFirestore } = require("firebase-admin/firestore");
 
 if (!admin.apps.length) {
-    const serviceAccount = require('../src/utils/weather-schedule-66b14-firebase-adminsdk-03da8-1d971c12df.json');
+    const serviceAccount = require("./weather-schedule-66b14-firebase-adminsdk-03da8-cd09df0bd8.json");
     admin.initializeApp({
         projectId: "weather-schedule-66b14",
         credential: admin.credential.cert(serviceAccount),

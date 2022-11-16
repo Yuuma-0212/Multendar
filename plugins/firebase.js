@@ -19,6 +19,6 @@ const functions = getFunctions(getApp());
 export const db = getFirestore(app);
 export const getEvents = httpsCallable(functions, "getEvents");
 
-connectAuthEmulator(auth, "http://localhost:9099");
-connectFunctionsEmulator(functions, 'localhost', 5001);
-connectFirestoreEmulator(db, 'localhost', 8080);
+//connectAuthEmulator(auth, "http://localhost:9099");
+//connectFunctionsEmulator(functions, 'localhost', 5001);
+//connectFirestoreEmulator(db, 'localhost', 8080);
