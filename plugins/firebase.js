@@ -4,7 +4,7 @@ import { getAuth, connectAuthEmulator } from "firebase/auth";
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 import axios from "axios";
 
-axios.get("/test").then((res) => {
+axios.get("https://weather-scheduler-test.azurewebsites.net/api/test").then((res) => {
   console.log('axios', JSON.stringify(res));
 });
 
