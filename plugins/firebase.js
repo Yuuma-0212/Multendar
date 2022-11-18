@@ -5,7 +5,7 @@ import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 import axios from "axios";
 
 axios.get("/test").then((res) => {
-  console.log('axios', res);
+  console.log('axios', JSON.stringify(res));
 });
 
 export const firebaseConfig = {
