@@ -10,7 +10,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.get("/test", (req, res) => {
-    console.log(process.env);
+    res.send(process.env);
 })
 
 // YYYY-MM-DDにフォーマット
