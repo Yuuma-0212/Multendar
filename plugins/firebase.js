@@ -4,19 +4,18 @@ import { getAuth, connectAuthEmulator } from "firebase/auth";
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 import axios from "axios";
 
-axios.get("https://weather-scheduler-test.azurewebsites.net/api/test").then((res) => {
-  console.log('axios', JSON.stringify(res.data.A_API_KEY));
+axios.get("http://localhost:3000/api/getEnv").then((res) => {
+  console.log('axios', JSON.stringify(res.data));
 });
-console.log('axios2', process.env.A_API_KEY);
 
 export const firebaseConfig = {
-  apiKey: process.env.A_API_KEY,
-  authDomain: process.env.A_AUTH_DOMAIN,
-  projectId: process.env.A_PROJECT_ID,
-  storageBucket: process.env.A_STORAGE_BUCKET,
-  messagingSenderId: process.env.A_MESSAGING_SENDER_ID,
-  appId: process.env.A_APP_ID,
-  measurementId: process.env.A_MEASUREMENT_ID
+  apiKey: process.env.API_KEY,
+  authDomain: process.env.AUTH_DOMAIN,
+  projectId: process.env.PROJECT_ID,
+  storageBucket: process.env.STORAGE_BUCKET,
+  messagingSenderId: process.env.MESSAGING_SENDER_ID,
+  appId: process.env.APP_ID,
+  measurementId: process.env.MEASUREMENT_ID
 };
 
 const app = initializeApp(firebaseConfig);

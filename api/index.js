@@ -9,7 +9,7 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.get("/test", (req, res) => {
+app.get("/getEnv", (req, res) => {
     res.send(process.env);
 })
 
