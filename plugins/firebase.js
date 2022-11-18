@@ -4,8 +4,9 @@ import { getAuth, connectAuthEmulator } from "firebase/auth";
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 import axios from "axios";
 
-const test = axios.get("/test");
-console.log(test);
+axios.get("/test").then((res) => {
+  console.log('axios', res);
+});
 
 export const firebaseConfig = {
   apiKey: process.env.A_API_KEY,
