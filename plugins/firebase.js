@@ -6,15 +6,16 @@ import axios from "axios";
 
 const getEnv = (async () => {
   await axios.get("https://weather-scheduler-test.azurewebsites.net/api/getEnv").then((res) => {
-    console.log('axios', JSON.stringify(res.data.API_KEY));
+    const env = JSON.parse(JSON.stringify(res.data));
+    console.log('axios', env);
     return {
-      'API_KEY': res.data.API_KEY,
-      'AUTH_DOMAIN': res.data.AUTH_DOMAIN,
-      'PROJECT_ID': res.data.PROJECT_ID,
-      'STORAGE_BUCKET': res.data.STORAGE_BUCKET,
-      'MESSAGING_SENDER_ID': res.data.MESSAGING_SENDER_ID,
-      'APP_ID': res.data.APP_ID,
-      'MEASUREMENT_ID': res.data.MEASUREMENT_ID
+      'API_KEY': env.API_KEY,
+      'AUTH_DOMAIN': env.AUTH_DOMAIN,
+      'PROJECT_ID': env.PROJECT_ID,
+      'STORAGE_BUCKET': env.STORAGE_BUCKET,
+      'MESSAGING_SENDER_ID': env.MESSAGING_SENDER_ID,
+      'APP_ID': env.APP_ID,
+      'MEASUREMENT_ID': env.MEASUREMENT_ID
     }
   });
 });
