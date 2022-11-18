@@ -7,7 +7,7 @@ import axios from "axios";
 axios.get("https://weather-scheduler-test.azurewebsites.net/api/test").then((res) => {
   console.log('axios', JSON.stringify(res.data.A_API_KEY));
 });
-console.log('axios2', process.env.NODE_ENV);
+console.log('axios2', process.env.A_API_KEY);
 
 export const firebaseConfig = {
   apiKey: process.env.A_API_KEY,
