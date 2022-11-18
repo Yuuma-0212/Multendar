@@ -4,19 +4,22 @@ import { getAuth, connectAuthEmulator } from "firebase/auth";
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 import axios from "axios";
 
-let env = null;
-axios.get("https://weather-scheduler-test.azurewebsites.net/api/getEnv").then((res) => {
-  console.log('axios', JSON.stringify(res.data));
-  env = {
-    'API_KEY': res.data.API_KEY,
-    'AUTH_DOMAIN': res.data.AUTH_DOMAIN,
-    'PROJECT_ID': res.data.PROJECT_ID,
-    'STORAGE_BUCKET': res.data.STORAGE_BUCKET,
-    'MESSAGING_SENDER_ID': res.data.MESSAGING_SENDER_ID,
-    'APP_ID': res.data.APP_ID,
-    'MEASUREMENT_ID': res.data.MEASUREMENT_ID
-  }
+const getEnv = (async () => {
+  await axios.get("https://weather-scheduler-test.azurewebsites.net/api/getEnv").then((res) => {
+    console.log('axios', JSON.stringify(res.data.API_KEY));
+    return {
+      'API_KEY': res.data.API_KEY,
+      'AUTH_DOMAIN': res.data.AUTH_DOMAIN,
+      'PROJECT_ID': res.data.PROJECT_ID,
+      'STORAGE_BUCKET': res.data.STORAGE_BUCKET,
+      'MESSAGING_SENDER_ID': res.data.MESSAGING_SENDER_ID,
+      'APP_ID': res.data.APP_ID,
+      'MEASUREMENT_ID': res.data.MEASUREMENT_ID
+    }
+  });
 });
+let env = getEnv();
+console.log(env);
 
 export const firebaseConfig = {
   apiKey: process.env.API_KEY | env.API_KEY,
