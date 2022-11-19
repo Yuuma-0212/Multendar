@@ -5,7 +5,7 @@ import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 import axios from "axios";
 
 const getEnv = (async () => {
-  await axios.get("https://weather-scheduler-test.azurewebsites.net/api/getEnv").then((res) => {
+  return await axios.get("https://weather-scheduler-test.azurewebsites.net/api/getEnv").then((res) => {
     const env = JSON.parse(JSON.stringify(res.data));
     console.log('axios', env.API_KEY);
     return {
