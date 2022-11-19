@@ -7,7 +7,7 @@ import axios from "axios";
 const getEnv = (async () => {
   await axios.get("https://weather-scheduler-test.azurewebsites.net/api/getEnv").then((res) => {
     const env = JSON.parse(JSON.stringify(res.data));
-    console.log('axios', env);
+    console.log('axios', env.API_KEY);
     return {
       'API_KEY': env.API_KEY,
       'AUTH_DOMAIN': env.AUTH_DOMAIN,
