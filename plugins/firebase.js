@@ -3,6 +3,7 @@ import { getFunctions, connectFunctionsEmulator, httpsCallable } from 'firebase/
 import { getAuth, connectAuthEmulator } from "firebase/auth";
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 
+/*
 export const firebaseConfig = {
   apiKey: process.env.API_KEY,
   authDomain: process.env.AUTH_DOMAIN,
@@ -13,16 +14,19 @@ export const firebaseConfig = {
   measurementId: process.env.MEASUREMENT_ID
 };
 
+
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
-const functions = getFunctions(getApp(), "asia-northeast1");
 export const db = getFirestore(app);
+
+//connectAuthEmulator(auth, "http://localhost:9099");
+//connectFunctionsEmulator(functions, 'localhost', 5001);
+//connectFirestoreEmulator(db, 'localhost', 8080);
+*/
+
+const functions = getFunctions(getApp(), "asia-northeast1");
 export const getEvents = httpsCallable(functions, "getEvents");
 export const callCheckUserExists = httpsCallable(functions, "callCheckUserExists");
 export const callAddUser = httpsCallable(functions, "callAddUser");
 export const callAddEvent = httpsCallable(functions, "callAddEvent");
 export const callGetEvents = httpsCallable(functions, "callGetEvents");
-
-connectAuthEmulator(auth, "http://localhost:9099");
-connectFunctionsEmulator(functions, 'localhost', 5001);
-connectFirestoreEmulator(db, 'localhost', 8080);
