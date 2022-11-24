@@ -9,55 +9,60 @@ import {
     setPersistence,
     browserLocalPersistence
 } from "firebase/auth";
-import { addUser, checkUserDataExists } from "~/plugins/firebase-firestore";
-import { hoge } from "~/plugins/firebase";
+import { addUser, checkUserExists } from "~/plugins/firebase-firestore";
 import axios from "axios";
 
 export const login = () => {
-    return new Promise((resolve, reject) => {
-        const auth = getAuth();
-        const provider = new GoogleAuthProvider();
-        signInWithPopup(auth, provider)
-            .then(async (result) => {
-                // This gives you a Google Access Token. You can use it to access the Google API.
-                //const credential = GoogleAuthProvider.credentialFromResult(result);
-                //const token = credential.accessToken;
+    const auth = getAuth();
+    const provider = new GoogleAuthProvider();
+    const signInResult = signInWithPopup(auth, provider)
+        .then(async (result) => {
+            // This gives you a Google Access Token. You can use it to access the Google API.
+            //const credential = GoogleAuthProvider.credentialFromResult(result);
+            //const token = credential.accessToken;
 
-                let user = null;
+            let user = null;
 
-                await result.user.getIdToken(true)
-                    .then(async (idToken) => {
-                        user = {
-                            uid: result.user.uid,
-                            idToken: idToken
-                        }
-                    });
-
-                checkUserDataExists(user.uid).then((existsData) => {
-                    if (!existsData) {
-                        addUser(result.user, user.idToken);
+            await result.user.getIdToken(true)
+                .then(async (idToken) => {
+                    user = {
+                        uid: result.user.uid,
+                        idToken: idToken
                     }
                 });
 
-                resolve(user);
-            }).catch((error) => {
-                // Handle Errors here.
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                // The email of the user's account used.
-                const email = error.email;
-                // The AuthCredential type that was used.
-                const credential = GoogleAuthProvider.credentialFromError(error);
-                reject(error);
+            await checkUserExists(user.uid).then((isUserExists) => {
+                if (!isUserExists) {
+                    addUser(result.user, user.idToken).then(() => {
+                        return;
+                    }).catch((error) => {
+                        throw new Error(error);
+                    });
+                }
             });
-    });
+
+            return user;
+        }).catch((error) => {
+            // Handle Errors here.
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            // The email of the user's account used.
+            const email = error.email;
+            // The AuthCredential type that was used.
+            const credential = GoogleAuthProvider.credentialFromError(error);
+            throw new Error(error);
+        });
+
+    return signInResult;
 }
 
 export const logout = async () => {
     const auth = getAuth();
-    await signOut(auth).then(() => {
+    const logoutResult = await signOut(auth).then(() => {
         return;
     }).catch((error) => {
-        return "エラー: " + error;
+        throw new Error(error);
     });
+
+    return logoutResult;
 }

@@ -9,10 +9,6 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.get("/getEnv", (req, res) => {
-    res.send(process.env);
-})
-
 // YYYY-MM-DDにフォーマット
 app.get("/formatDate", (req, res) => {
     const date = new Date(req.query.date);

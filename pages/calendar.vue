@@ -604,7 +604,7 @@
 </template>
 
 <script>
-import { updateEvent } from "~/plugins/firebase-firestore.js";
+import { addEvent } from "~/plugins/firebase-firestore.js";
 import { areas } from "~/plugins/areas.js";
 import Contact from "~/components/Contact.vue";
 import Gmap from "~/components/Gmap.vue";
@@ -612,10 +612,8 @@ import GmapAc from "~/components/GmapAc.vue";
 
 export default {
   components: { Contact, Gmap, GmapAc },
-  name: "Calendar",
-  async fetch() {
-
-  },
+  name: "calendar",
+  async fetch() {},
   data: () => ({
     focus: null,
     type: "month",
@@ -697,8 +695,8 @@ export default {
     this.areas = areas;
 
     // 天気予報を取得
-    const selectedArea = JSON.parse(this.$store.getters.getSelectedArea);
-    if (selectedArea !== null) {
+    const selectedArea = this.$store.getters.getSelectedArea;
+    if (selectedArea != undefined) {
       const forecast = await this.$axios.$get(
         "http://localhost:3000/api/getForecast",
         {
@@ -861,7 +859,7 @@ export default {
 
       this.events.push(newEvent);
 
-      updateEvent(newEvent)
+      addEvent(newEvent)
         .then(() => {
           this.$toast.success("登録が完了しました", {
             position: "top-right",
@@ -884,7 +882,7 @@ export default {
       this.lat = place.geometry.location.lat();
       this.lng = place.geometry.location.lng();
       this.address = place.formatted_address;
-      this.machangeforkers.shift();
+      this.markers.shift();
       this.markers.push({
         position: {
           lat: this.lat,

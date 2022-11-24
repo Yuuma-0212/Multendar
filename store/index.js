@@ -1,11 +1,11 @@
 export const strict = false;    // falseにしないとstateのeventsにpushできない？
 import Cookie from "cookie";
-import { getEvents, hoge } from "~/plugins/firebase";
+import { getEvents } from "~/plugins/firebase-firestore";
 
 export const state = () => ({
     idToken: null,
     uid: null,
-    selectedArea: null,
+    selectedArea: {},
     events: [],
     isLogin: false
 });
@@ -37,32 +37,27 @@ export const mutations = {
 
 export const actions = {
     async nuxtServerInit({ state, dispatch }, { app, req, res, redirect }) {
-        let selectedArea = ""; 
+        let selectedArea = {};
         // クッキーからデータを取得してストアに保持
         if (req.headers.cookie) {
             const cookie = Cookie.parse(req.headers.cookie);
-            //const vuex = JSON.parse(cookie.vuex);
-            selectedArea = cookie.selectedArea;
-            const vuex = {
+            if (cookie.selectedArea != undefined) {
+                selectedArea = JSON.parse(cookie.selectedArea);
+            }
+            const auth = {
                 uid: cookie.uid,
                 idToken: cookie.idToken,
             }
 
-            await getEvents({ uid: vuex.uid }).then((result) => {
-                // イベント取得
-                if (result.data._fieldsProto.events === undefined) return;
-                const events = result.data._fieldsProto.events.arrayValue.values.map((value) => {
-                    return JSON.parse(value.stringValue);
-                });
-
-                dispatch("setEvents", events);
+            await getEvents(auth.uid).then((events) => {
+                if (events != undefined) dispatch("setEvents", events);
             }).catch((error) => {
                 console.log(error);
             });
 
-            if (vuex.idToken) {
-                dispatch("setToken", vuex.idToken);
-                dispatch("setUid", vuex.uid);
+            if (auth.idToken) {
+                dispatch("setToken", auth.idToken);
+                dispatch("setUid", auth.uid);
             }
         }
 

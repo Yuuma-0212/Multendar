@@ -12,6 +12,9 @@ import Footer from "~/components/Footer.vue";
 
 export default {
   name: "DefaultLayout",
-  components: { Header, Footer }
+  components: { Header, Footer },
+  async asyncData({axios}) {
+    await axios.$get("/getEnv");
+  }
 };
 </script>
