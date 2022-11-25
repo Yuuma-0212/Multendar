@@ -19,7 +19,7 @@ const getEnv = async () => {
 }
 
 let firebaseConfig = {};
-getEnv();
+//getEnv();
 /*
 export const firebaseConfig = {
   apiKey: process.env.API_KEY,

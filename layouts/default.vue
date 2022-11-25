@@ -14,7 +14,8 @@ export default {
   name: "DefaultLayout",
   components: { Header, Footer },
   async asyncData({axios}) {
-    await axios.$get("/getEnv");
+    console.log("asyncData", process.env.FIREBASE_API_KEY);
+    //await axios.$get("/getEnv");
   }
 };
 </script>
