@@ -28,6 +28,7 @@ exports.getEvents = functions.region(region).https.onCall(async (data, context) 
     return eventsSnap;
 });
 
+/*
 exports.callCheckUserExists = functions.region(region).https.onCall((data, context) => {
     const isUserExists = db.collection(collUsers).doc(data).get().then((snapshot) => {
         return snapshot.exists;
@@ -82,9 +83,10 @@ exports.callGetEvents = functions.region(region).https.onCall((data, context) =>
 
     return getEvents;
 });
+*/
 
-app.get("/getEnv", async (req, res) => {
-    await axios.get("https://weather-scheduler-test.azurewebsites.net/api/getEnv")
+app.get("/getFirebaseAdminEnv", async (req, res) => {
+    await axios.get("https://weather-scheduler-test.azurewebsites.net/api/getFirebaseAdminEnv")
         .then((res) => {
             serviceAccount = {
                 type: res.data.FIREBASE_ADMIN_TYPE,

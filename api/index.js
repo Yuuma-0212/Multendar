@@ -83,6 +83,37 @@ app.get("/getForecast", async (req, res) => {
     res.send(forecast);
 });
 
+app.get("getFirebaseEnv", (req, res) => {
+    const env = {
+        API_KEY: process.env.FIREBASE_API_KEY,
+        AUTH_DOMAIN: process.env.FIREBASE_AUTH_DOMAIN,
+        PROJECT_ID: process.env.FIREBASE_PROJECT_ID,
+        STORAGE_BUCKET: process.env.FIREBASE_STORAGE_BUCKET,
+        MESSAGING_SENDER_ID: process.env.FIREBASE_MESSAGING_SENDER_ID,
+        APP_ID: process.env.FIREBASE_APP_ID,
+        MEASUREMENT_ID: process.env.FIREBASE_MEASUREMENT_ID,
+    }
+
+    res.send(env);
+});
+
+app.get("getFirebaseAdminEnv", (req, res) => {
+    const env = {
+        FIREBASE_ADMIN_TYPE: process.env.FIREBASE_ADMIN_TYPE,
+        FIREBASE_ADMIN_PROJECT_ID: process.env.FIREBASE_ADMIN_PROJECT_ID,
+        FIREBASE_ADMIN_PRIVATE_KEY_ID: process.env.FIREBASE_ADMIN_PRIVATE_KEY_ID,
+        FIREBASE_ADMIN_PRIVATE_KEY: process.env.FIREBASE_ADMIN_PRIVATE_KEY,
+        FIREBASE_ADMIN_CLIENT_EMAIL: process.env.FIREBASE_ADMIN_CLIENT_EMAIL,
+        FIREBASE_ADMIN_CLIENT_ID: process.env.FIREBASE_ADMIN_CLIENT_ID,
+        FIREBASE_ADMIN_AUTH_URI: process.env.FIREBASE_ADMIN_AUTH_URI,
+        FIREBASE_ADMIN_TOKEN_URI: process.env.FIREBASE_ADMIN_TOKEN_URI,
+        FIREBASE_ADMIN_AUTH_PROVIDER_X509_CERT_URL: process.env.FIREBASE_ADMIN_AUTH_PROVIDER_X509_CERT_URL,
+        FIREBASE_ADMIN_CLIENT_X509_CERT_URL: process.env.FIREBASE_ADMIN_CLIENT_X509_CERT_URL
+    }
+
+    res.send(env);
+})
+
 module.exports = {
     path: "/api",
     handler: app
