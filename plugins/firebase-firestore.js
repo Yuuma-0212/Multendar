@@ -46,7 +46,7 @@ export const addEvent = (async (event) => {
     });
 });
 
-export const getEvent = (async (uid) => {
+export const getEvents = (async (uid) => {
     const userRef = doc(db, queryDocUsers, uid);
     const userSnap = await getDoc(userRef);
     if (userSnap.exists()) {
