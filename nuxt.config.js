@@ -87,7 +87,7 @@ export default {
     }
   },
 
-  env: {
+  privateRuntimeConfig: {
     API_KEY: process.env.API_KEY | process.env.FIREBASE_API_KEY,
     AUTH_DOMAIN: process.env.AUTH_DOMAIN | process.env.FIREBASE_AUTH_DOMAIN,
     PROJECT_ID: process.env.PROJECT_ID | process.env.FIREBASE_PROJECT_ID,

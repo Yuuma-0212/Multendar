@@ -3,6 +3,10 @@ import { getFunctions, connectFunctionsEmulator, httpsCallable } from 'firebase/
 import { getAuth, connectAuthEmulator } from "firebase/auth";
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 
+export default (({$config}) => {
+  console.log("$config", $config);
+})
+
 export const firebaseConfig = {
   apiKey: process.env.API_KEY,
   authDomain: process.env.AUTH_DOMAIN,
