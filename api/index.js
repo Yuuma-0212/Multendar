@@ -9,6 +9,10 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+app.get("/hello", (req, res) => {
+    res.send("hello express");
+})
+
 // YYYY-MM-DDにフォーマット
 app.get("/formatDate", (req, res) => {
     const date = new Date(req.query.date);
@@ -83,8 +87,8 @@ app.get("/getForecast", async (req, res) => {
     res.send(forecast);
 });
 
-app.get("getFirebaseEnv", (req, res) => {
-    const env = {
+app.get("/getFirebaseEnv", (req, res) => {
+    const firebaseConfig = {
         API_KEY: process.env.FIREBASE_API_KEY,
         AUTH_DOMAIN: process.env.FIREBASE_AUTH_DOMAIN,
         PROJECT_ID: process.env.FIREBASE_PROJECT_ID,
@@ -94,11 +98,11 @@ app.get("getFirebaseEnv", (req, res) => {
         MEASUREMENT_ID: process.env.FIREBASE_MEASUREMENT_ID,
     }
 
-    res.send(env);
+    res.send(firebaseConfig);
 });
 
-app.get("getFirebaseAdminEnv", (req, res) => {
-    const env = {
+app.get("/getFirebaseAdminEnv", (req, res) => {
+    const serviceAccount = {
         FIREBASE_ADMIN_TYPE: process.env.FIREBASE_ADMIN_TYPE,
         FIREBASE_ADMIN_PROJECT_ID: process.env.FIREBASE_ADMIN_PROJECT_ID,
         FIREBASE_ADMIN_PRIVATE_KEY_ID: process.env.FIREBASE_ADMIN_PRIVATE_KEY_ID,
@@ -111,7 +115,7 @@ app.get("getFirebaseAdminEnv", (req, res) => {
         FIREBASE_ADMIN_CLIENT_X509_CERT_URL: process.env.FIREBASE_ADMIN_CLIENT_X509_CERT_URL
     }
 
-    res.send(env);
+    res.send(serviceAccount);
 })
 
 module.exports = {

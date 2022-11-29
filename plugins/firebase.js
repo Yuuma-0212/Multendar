@@ -2,11 +2,26 @@ import { initializeApp, getApp } from "firebase/app"
 import { getFunctions, connectFunctionsEmulator, httpsCallable } from 'firebase/functions'
 import { getAuth, connectAuthEmulator } from "firebase/auth";
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
+import axios from "axios";
 
-export default (({$config}) => {
-  console.log("$config", $config);
-})
+export const firebase = async () => {
+  await axios.get("http://localhost:3000/api/getFirebaseEnv").then((res) => {
+    const firebaseConfig = {
+      apiKey: res.data.API_KEY,
+      authDomain: res.data.AUTH_DOMAIN,
+      projectId: res.data.PROJECT_ID,
+      storageBucket: res.data.STORAGE_BUCKET,
+      messagingSenderId: res.data.MESSAGING_SENDER_ID,
+      appId: res.data.APP_ID,
+      measurementId: res.data.MEASUREMENT_ID
+    }
+    initializeApp(firebaseConfig);
+  });
+}
 
+firebase();
+
+/*
 export const firebaseConfig = {
   apiKey: process.env.API_KEY,
   authDomain: process.env.AUTH_DOMAIN,
@@ -17,15 +32,13 @@ export const firebaseConfig = {
   measurementId: process.env.MEASUREMENT_ID
 }
 
-console.log("firebase config", firebaseConfig);
-
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 export const db = getFirestore(app);
 
 const functions = getFunctions(getApp(), "asia-northeast1");
 export const getEvents = httpsCallable(functions, "getEvents");
-/*
+
 export const callCheckUserExists = httpsCallable(functions, "callCheckUserExists");
 export const callAddUser = httpsCallable(functions, "callAddUser");
 export const callAddEvent = httpsCallable(functions, "callAddEvent");

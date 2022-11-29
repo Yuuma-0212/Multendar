@@ -13,9 +13,6 @@ import firebase from "~/plugins/firebase.js";
 
 export default {
   name: "DefaultLayout",
-  components: { Header, Footer },
-  mounted() {
-    console.log(firebase());
-  }
+  components: { Header, Footer }
 };
 </script>

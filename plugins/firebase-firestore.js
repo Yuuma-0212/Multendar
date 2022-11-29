@@ -1,8 +1,16 @@
 import cookie from "js-cookie";
-import { doc, setDoc, getDoc, updateDoc, arrayUnion, serverTimestamp } from "firebase/firestore";
-import { db, callCheckUserExists, callAddUser, callAddEvent, callGetEvents } from "~/plugins/firebase";
+import { initializeApp } from "firebase/app";
+import { getFirestore, doc, setDoc, getDoc, updateDoc, arrayUnion, serverTimestamp } from "firebase/firestore";
+//import { db, callCheckUserExists, callAddUser, callAddEvent, callGetEvents } from "~/plugins/firebase";
+import { firebase } from "~/plugins/firebase";
 
+let db = null;
 const queryDocUsers = "users";
+
+firebase().then(() => {
+    db = getFirestore();
+})
+
 
 export const checkUserExists = (async (uid) => {
     const docRef = doc(db, queryDocUsers, uid);
