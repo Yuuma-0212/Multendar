@@ -9,7 +9,6 @@
 <script>
 import Header from "~/components/Header.vue";
 import Footer from "~/components/Footer.vue";
-import firebase from "~/plugins/firebase.js";
 
 export default {
   name: "DefaultLayout",

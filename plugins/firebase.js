@@ -5,7 +5,7 @@ import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 import axios from "axios";
 
 export const firebase = async () => {
-  await axios.get("https://weather-scheduler-test.azurewebsites.net/api/getFirebaseEnv").then((res) => {
+  await axios.get("/api/getFirebaseEnv").then((res) => {
     const firebaseConfig = {
       apiKey: res.data.API_KEY,
       authDomain: res.data.AUTH_DOMAIN,
@@ -22,29 +22,28 @@ export const firebase = async () => {
 firebase();
 
 /*
-export const firebaseConfig = {
-  apiKey: process.env.API_KEY,
-  authDomain: process.env.AUTH_DOMAIN,
-  projectId: process.env.PROJECT_ID,
-  storageBucket: process.env.STORAGE_BUCKET,
-  messagingSenderId: process.env.MESSAGING_SENDER_ID,
-  appId: process.env.APP_ID,
-  measurementId: process.env.MEASUREMENT_ID
+export const firebase = async () => {
+  const firebaseConfig = {
+    apiKey: process.env.API_KEY,
+    authDomain: process.env.AUTH_DOMAIN,
+    projectId: process.env.PROJECT_ID,
+    storageBucket: process.env.STORAGE_BUCKET,
+    messagingSenderId: process.env.MESSAGING_SENDER_ID,
+    appId: process.env.APP_ID,
+    measurementId: process.env.MEASUREMENT_ID
+  }
+
+  initializeApp(firebaseConfig);
 }
 
-const app = initializeApp(firebaseConfig);
+firebase();
+
 const auth = getAuth();
-export const db = getFirestore(app);
-
+const db = getFirestore();
 const functions = getFunctions(getApp(), "asia-northeast1");
-export const getEvents = httpsCallable(functions, "getEvents");
+//export const getEvents = httpsCallable(functions, "getEvents");
 
-export const callCheckUserExists = httpsCallable(functions, "callCheckUserExists");
-export const callAddUser = httpsCallable(functions, "callAddUser");
-export const callAddEvent = httpsCallable(functions, "callAddEvent");
-export const callGetEvents = httpsCallable(functions, "callGetEvents");
+connectAuthEmulator(auth, "http://localhost:9099");
+connectFunctionsEmulator(functions, 'localhost', 5001);
+connectFirestoreEmulator(db, 'localhost', 8080);
 */
-
-//connectAuthEmulator(auth, "http://localhost:9099");
-//connectFunctionsEmulator(functions, 'localhost', 5001);
-//connectFirestoreEmulator(db, 'localhost', 8080);

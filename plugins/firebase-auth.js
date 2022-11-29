@@ -10,7 +10,6 @@ import {
     browserLocalPersistence
 } from "firebase/auth";
 import { addUser, checkUserExists } from "~/plugins/firebase-firestore";
-import axios from "axios";
 
 export const login = () => {
     const auth = getAuth();

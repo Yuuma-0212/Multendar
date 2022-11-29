@@ -1,7 +1,5 @@
 import cookie from "js-cookie";
-import { initializeApp } from "firebase/app";
 import { getFirestore, doc, setDoc, getDoc, updateDoc, arrayUnion, serverTimestamp } from "firebase/firestore";
-//import { db, callCheckUserExists, callAddUser, callAddEvent, callGetEvents } from "~/plugins/firebase";
 import { firebase } from "~/plugins/firebase";
 
 let db = null;
@@ -14,10 +12,9 @@ firebase().then(() => {
 
 export const checkUserExists = (async (uid) => {
     const docRef = doc(db, queryDocUsers, uid);
-    const docSnap = await getDoc(docRef);
+    const userSnap = await getDoc(docRef);
 
-    if (docSnap.exists()) {
-        console.log("user exists");
+    if (userSnap.exists()) {
         return true;
     }
     return false;
