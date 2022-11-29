@@ -5,7 +5,7 @@ import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 import axios from "axios";
 
 export const firebase = async () => {
-  await axios.get("/api/getFirebaseEnv").then((res) => {
+  await axios.get("/getFirebaseEnv").then((res) => {
     const firebaseConfig = {
       apiKey: res.data.API_KEY,
       authDomain: res.data.AUTH_DOMAIN,
