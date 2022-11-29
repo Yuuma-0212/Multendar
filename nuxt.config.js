@@ -94,7 +94,8 @@ export default {
 
   privateRuntimeConfig: {
     axios: {
-      baseURL: process.env.API_BASE_URL + "/api"
+      baseURL: process.env.API_BASE_URL + "/api",
+      https: true
     }
   },
 
