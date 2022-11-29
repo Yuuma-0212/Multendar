@@ -698,7 +698,7 @@ export default {
     const selectedArea = this.$store.getters.getSelectedArea;
     if (selectedArea != undefined) {
       const forecast = await this.$axios.$get(
-        "/getForecast",
+        "https://" + process.env.WEBSITE_HOSTNAME + "/getForecast",
         {
           params: {
             lat: selectedArea.lat,
@@ -714,7 +714,7 @@ export default {
 
     const date = new Date();
     const dateToday = await this.$axios.$get(
-      "/formatDate",
+      "https://" + process.env.WEBSITE_HOSTNAME + "/formatDate",
       {
         params: {
           date: date,
@@ -906,7 +906,7 @@ export default {
     async changeForecastArea(event) {
       this.isLoadingSelectedArea = true;
       const forecast = await this.$axios.$get(
-        "/getForecast",
+        "https://" + process.env.WEBSITE_HOSTNAME + "/getForecast",
         {
           params: {
             lat: event.lat,
