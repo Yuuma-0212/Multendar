@@ -33,6 +33,7 @@ export default {
     '~/plugins/firebase-firestore.js',
     '~/plugins/router.js',
     '~/plugins/areas.js',
+    '~/plugins/axios.js',
     '~/plugins/gmap-vue.js',
     '~/plugins/fontawesome.js',
     {

@@ -1,7 +1,6 @@
-import axios from "axios";
+import axios from "~/plugins/axios.js";
 import express from "express";
 import bodyParser from "body-parser";
-import { config } from "dotenv";
 //const express = require("express");
 //const bodyParser = require("body-parser");
 const app = express();
@@ -23,9 +22,8 @@ app.get("/formatDate", (req, res) => {
 
 // 天気予報を取得
 app.get("/getForecast", async (req, res) => {
-    const openWeather = await axios.get(
-        `https://api.openweathermap.org/data/2.5/onecall?lat=${req.query.lat}&lon=${req.query.lon}&units=metric&lang=ja&exclude=minutely,alerts,current&appid=e55dace96a6165e3793d081519253b8d`
-    );
+    const openWeatherUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${req.query.lat}&lon=${req.query.lon}&units=metric&lang=ja&exclude=minutely,alerts,current&appid=e55dace96a6165e3793d081519253b8d`;
+    const openWeather = await axios.get(openWeatherUrl);
 
     // １週間の予報を取得
     let forecastWeek = {};
@@ -35,7 +33,7 @@ app.get("/getForecast", async (req, res) => {
         const dt = openWeather.data.daily[i].dt * 1000; // sからmsに変換
         const date = new Date(dt);
         const fDate = await axios.get(
-            "http://localhost:3000/api/formatDate",
+            "/formatDate",
             {
                 params: {
                     date: date,
@@ -63,7 +61,7 @@ app.get("/getForecast", async (req, res) => {
         const dt = openWeather.data.hourly[i].dt * 1000;
         const date = new Date(dt);
         const fDate = await axios.get(
-            "http://localhost:3000/api/formatDate",
+            "/formatDate",
             {
                 params: {
                     date: date,

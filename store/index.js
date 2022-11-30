@@ -41,6 +41,7 @@ export const mutations = {
 export const actions = {
     async nuxtServerInit({ state, dispatch }, { app, req, res, redirect }) {
         let selectedArea = {};
+
         // クッキーからデータを取得してストアに保持
         if (req.headers.cookie) {
             const cookie = Cookie.parse(req.headers.cookie);

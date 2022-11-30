@@ -1,11 +1,11 @@
 import { initializeApp, getApp } from "firebase/app"
+import axios from "~/plugins/axios.js";
 import { getFunctions, connectFunctionsEmulator, httpsCallable } from 'firebase/functions'
 import { getAuth, connectAuthEmulator } from "firebase/auth";
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
-import axios from "axios";
 
 export const firebase = async () => {
-  await axios.get("https://" + process.env.WEBSITE_HOSTNAME + "/getFirebaseEnv").then((res) => {
+  await axios.get("/getFirebaseEnv").then((res) => {
     const firebaseConfig = {
       apiKey: res.data.API_KEY,
       authDomain: res.data.AUTH_DOMAIN,

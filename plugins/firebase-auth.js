@@ -10,9 +10,15 @@ import {
     browserLocalPersistence
 } from "firebase/auth";
 import { addUser, checkUserExists } from "~/plugins/firebase-firestore";
+import { firebase } from "~/plugins/firebase";
+
+let auth = null;
+firebase().then(() => {
+    auth = getAuth();
+})
+
 
 export const login = () => {
-    const auth = getAuth();
     const provider = new GoogleAuthProvider();
     const signInResult = signInWithPopup(auth, provider)
         .then(async (result) => {
@@ -56,7 +62,6 @@ export const login = () => {
 }
 
 export const logout = async () => {
-    const auth = getAuth();
     const logoutResult = await signOut(auth).then(() => {
         return;
     }).catch((error) => {
