@@ -3,7 +3,6 @@ import { getFunctions, connectFunctionsEmulator, httpsCallable } from 'firebase/
 import { getAuth, connectAuthEmulator } from "firebase/auth";
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 
-/*
 export const firebase = async () => {
   await axios.get("/getFirebaseEnv").then((res) => {
     const firebaseConfig = {
@@ -16,13 +15,20 @@ export const firebase = async () => {
       measurementId: res.data.MEASUREMENT_ID
     }
     initializeApp(firebaseConfig);
+
+    const firebaseGetService = {
+      auth: getAuth(),
+      firestore: getFirestore(),
+      functions: getFunctions(getApp())
+    }
+
+    return firebaseGetService;
   });
 }
 
 firebase();
-*/
 
-
+/*
 export const firebase = async () => {
   const firebaseConfig = {
     apiKey: process.env.API_KEY,
@@ -50,6 +56,7 @@ firebase().then((service) => {
   connectFunctionsEmulator(service.functions, 'localhost', 5001);
   connectFirestoreEmulator(service.firestore, 'localhost', 8080);
 });
+*/
 
 /*
 const auth = getAuth();
