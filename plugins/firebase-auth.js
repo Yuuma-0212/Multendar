@@ -1,5 +1,4 @@
 import {
-    getAuth,
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
     GoogleAuthProvider,
@@ -13,8 +12,8 @@ import { addUser, checkUserExists } from "~/plugins/firebase-firestore";
 import { firebase } from "~/plugins/firebase";
 
 let auth = null;
-firebase().then(() => {
-    auth = getAuth();
+firebase().then((service) => {
+    auth = service.auth;
 })
 
 

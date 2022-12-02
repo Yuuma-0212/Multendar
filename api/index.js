@@ -1,9 +1,18 @@
-import axios from "~/plugins/axios.js";
+import axios from "axios";
 import express from "express";
 import bodyParser from "body-parser";
 //const express = require("express");
 //const bodyParser = require("body-parser");
 const app = express();
+
+// YYYY-MM-DDにフォーマット
+const formatDate = (date) => {
+    //const date = new Date(req.query.date);
+    const month = ("0" + (date.getMonth() + 1)).slice(-2);
+    const day = ("0" + date.getDate()).slice(-2);
+    const fDate = `${date.getFullYear()}-${month}-${day}`;
+    return fDate;
+}
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -13,12 +22,14 @@ app.get("/hello", (req, res) => {
 })
 
 // YYYY-MM-DDにフォーマット
+/*
 app.get("/formatDate", (req, res) => {
     const date = new Date(req.query.date);
     const month = ("0" + (date.getMonth() + 1)).slice(-2);
     const day = ("0" + date.getDate()).slice(-2);
     res.send(`${date.getFullYear()}-${month}-${day}`);
 });
+*/
 
 // 天気予報を取得
 app.get("/getForecast", async (req, res) => {
@@ -32,14 +43,17 @@ app.get("/getForecast", async (req, res) => {
     for (let i = 0; i < forecastWeekL; i++) {
         const dt = openWeather.data.daily[i].dt * 1000; // sからmsに変換
         const date = new Date(dt);
+        const fDate = formatDate(date);
+        /*
         const fDate = await axios.get(
-            "/formatDate",
+            "http://localhost:3000/api/formatDate",
             {
                 params: {
                     date: date,
                 },
             }
         );
+        */
 
         const icon = openWeather.data.daily[i].weather[0].icon;
         const tempMin = openWeather.data.daily[i].temp.min;
@@ -60,14 +74,18 @@ app.get("/getForecast", async (req, res) => {
     for (let i = 0; i < forecastHourL; i++) {
         const dt = openWeather.data.hourly[i].dt * 1000;
         const date = new Date(dt);
+        const fDate = formatDate(date);
+        /*
         const fDate = await axios.get(
-            "/formatDate",
+            "http://localhost:3000/api/formatDate",
             {
                 params: {
                     date: date,
                 },
             }
         );
+        */
+
         const hour = date.getHours();
         const icon = openWeather.data.hourly[i].weather[0].icon;
         const temp = openWeather.data.hourly[i].temp;

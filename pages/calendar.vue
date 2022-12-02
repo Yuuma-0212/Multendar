@@ -143,15 +143,13 @@
                         <span>{{ day }}</span>
                       </v-btn>
                     </template>
-                    <template v-if="forecastWeek[date]">
-                      <template v-if="date && forecastWeek[date]">
-                        <div class="calendar__weather-img-outer">
-                          <img
-                            class="calendar__weather-img"
-                            :src="forecastWeek[date].icon"
-                          />
-                        </div>
-                      </template>
+                    <template v-if="forecastWeek && forecastWeek.length">
+                      <div class="calendar__weather-img-outer">
+                        <img
+                          class="calendar__weather-img"
+                          :src="forecastWeek[date].icon"
+                        />
+                      </div>
                     </template>
                   </v-row>
                 </template>
@@ -173,16 +171,13 @@
                         <span>{{ day }}</span>
                       </v-btn>
                     </template>
-
-                    <template v-if="forecastWeek[date]">
-                      <template v-if="date && forecastWeek[date]">
-                        <div class="calendar__weather-img-outer">
-                          <img
-                            class="calendar__weather-img"
-                            :src="forecastWeek[date].icon"
-                          />
-                        </div>
-                      </template>
+                    <template v-if="forecastWeek && forecastWeek.length">
+                      <div class="calendar__weather-img-outer">
+                        <img
+                          class="calendar__weather-img"
+                          :src="forecastWeek[date].icon"
+                        />
+                      </div>
                     </template>
                   </v-row>
                   <p class="calendar__temp ma-0" v-if="forecastWeek[date]">
@@ -684,28 +679,22 @@ export default {
     isLoadingSelectedArea: false,
   }),
   async mounted() {
-    this.$refs.calendar.checkChange();
+    //this.$refs.calendar.checkChange();
     this.cWindowW = window.innerWidth;
 
     window.addEventListener("resize", () => {
       this.cWindowW = window.innerWidth;
     });
-  },
-  async created() {
-    this.areas = areas;
 
     // 天気予報を取得
     const selectedArea = this.$store.getters.getSelectedArea;
     if (selectedArea != undefined) {
-      const forecast = await this.$axios.$get(
-        "/getForecast",
-        {
-          params: {
-            lat: selectedArea.lat,
-            lon: selectedArea.lon,
-          },
-        }
-      );
+      const forecast = await this.$axios.$get("/getForecast", {
+        params: {
+          lat: selectedArea.lat,
+          lon: selectedArea.lon,
+        },
+      });
 
       this.selectedArea = selectedArea;
       this.forecastWeek = forecast.week;
@@ -713,15 +702,18 @@ export default {
     }
 
     const date = new Date();
-    const dateToday = await this.$axios.$get(
-      "/formatDate",
-      {
-        params: {
-          date: date,
-        },
-      }
-    );
+    const dateToday = this.formatDate(date);
+    /*
+    const dateToday = await this.$axios.$get("/formatDate", {
+      params: {
+        date: date,
+      },
+    });
+    */
     this.dateToday = dateToday;
+  },
+  created() {
+    this.areas = areas;
   },
   methods: {
     viewDay(date) {
@@ -905,21 +897,25 @@ export default {
     },
     async changeForecastArea(event) {
       this.isLoadingSelectedArea = true;
-      const forecast = await this.$axios.$get(
-        "/getForecast",
-        {
-          params: {
-            lat: event.lat,
-            lon: event.lon,
-          },
-        }
-      );
+      const forecast = await this.$axios.$get("/getForecast", {
+        params: {
+          lat: event.lat,
+          lon: event.lon,
+        },
+      });
 
       //this.$store.dispatch("setSelectedArea", JSON.stringify(event));
       this.$cookies.set("selectedArea", JSON.stringify(event));
       this.isLoadingSelectedArea = false;
       this.forecastWeek = forecast.week;
       this.forecastHour = forecast.hour;
+    },
+    formatDate(date) {
+      // YYYY-MM-DDにフォーマット
+      const month = ("0" + (date.getMonth() + 1)).slice(-2);
+      const day = ("0" + date.getDate()).slice(-2);
+      const fDate = `${date.getFullYear()}-${month}-${day}`;
+      return fDate;
     },
   },
 };

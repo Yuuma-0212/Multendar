@@ -1,7 +1,6 @@
 export const strict = false;    // falseにしないとstateのeventsにpushできない？
 import Cookie from "cookie";
-import { getApp } from "firebase/app";
-import { getFunctions, httpsCallable } from 'firebase/functions';
+import { httpsCallable } from 'firebase/functions';
 import { firebase } from "~/plugins/firebase";
 //import { getEvents } from "~/plugins/firebase-firestore";
 
@@ -53,14 +52,14 @@ export const actions = {
                 idToken: cookie.idToken,
             }
 
-            await firebase().then(async () => {
-                const functions = getFunctions(getApp());
+            await firebase().then(async (service) => {
+                const functions = service.functions;
                 const getEvents = httpsCallable(functions, "getEvents");
 
                 await getEvents(auth.uid).then((events) => {
                     if (events != undefined) dispatch("setEvents", events);
                 }).catch((error) => {
-                    console.log(error);
+                    console.log("getEvents Error", error);
                 });
             });
 

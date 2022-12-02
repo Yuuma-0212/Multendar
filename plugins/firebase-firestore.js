@@ -1,13 +1,13 @@
 import cookie from "js-cookie";
-import { getFirestore, doc, setDoc, getDoc, updateDoc, arrayUnion, serverTimestamp } from "firebase/firestore";
+import { doc, setDoc, getDoc, updateDoc, arrayUnion, serverTimestamp } from "firebase/firestore";
 import { firebase } from "~/plugins/firebase";
 
 let db = null;
 const queryDocUsers = "users";
 
-firebase().then(() => {
-    db = getFirestore();
-})
+firebase().then((service) => {
+    db = service.firestore
+});
 
 
 export const checkUserExists = (async (uid) => {
@@ -21,19 +21,16 @@ export const checkUserExists = (async (uid) => {
 });
 
 export const addUser = ((user, idToken) => {
-    return new Promise((resolve, reject) => {
-        try {
-            const userData = {
-                name: user.displayName,
-                email: user.email,
-                idToken: idToken,
-                timestamp: serverTimestamp(),
-            }
-            const docRef = setDoc(doc(db, queryDocUsers, user.uid), userData);
-            resolve();
-        } catch (error) {
-            reject(error);
-        }
+    const userData = {
+        name: user.displayName,
+        email: user.email,
+        idToken: idToken,
+        timestamp: serverTimestamp(),
+    }
+    setDoc(doc(db, queryDocUsers, user.uid), userData).then(() => {
+        return;
+    }).catch((error) => {
+        throw new Error(error);
     });
 });
 

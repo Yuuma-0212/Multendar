@@ -1,9 +1,9 @@
-import { initializeApp, getApp } from "firebase/app"
-import axios from "~/plugins/axios.js";
-import { getFunctions, connectFunctionsEmulator, httpsCallable } from 'firebase/functions'
+import { initializeApp, getApp } from "firebase/app";
+import { getFunctions, connectFunctionsEmulator, httpsCallable } from 'firebase/functions';
 import { getAuth, connectAuthEmulator } from "firebase/auth";
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 
+/*
 export const firebase = async () => {
   await axios.get("/getFirebaseEnv").then((res) => {
     const firebaseConfig = {
@@ -20,8 +20,9 @@ export const firebase = async () => {
 }
 
 firebase();
+*/
 
-/*
+
 export const firebase = async () => {
   const firebaseConfig = {
     apiKey: process.env.API_KEY,
@@ -34,10 +35,23 @@ export const firebase = async () => {
   }
 
   initializeApp(firebaseConfig);
+
+  const firebaseGetService = {
+    auth: getAuth(),
+    firestore: getFirestore(),
+    functions: getFunctions(getApp())
+  }
+
+  return firebaseGetService;
 }
 
-firebase();
+firebase().then((service) => {
+  connectAuthEmulator(service.auth, "http://localhost:9099");
+  connectFunctionsEmulator(service.functions, 'localhost', 5001);
+  connectFirestoreEmulator(service.firestore, 'localhost', 8080);
+});
 
+/*
 const auth = getAuth();
 const db = getFirestore();
 const functions = getFunctions(getApp(), "asia-northeast1");
