@@ -2,6 +2,7 @@ import { initializeApp, getApp } from "firebase/app";
 import { getFunctions, connectFunctionsEmulator, httpsCallable } from 'firebase/functions';
 import { getAuth, connectAuthEmulator } from "firebase/auth";
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
+import axios from "axios";
 
 export const firebase = async () => {
   await axios.get("/getFirebaseEnv").then((res) => {
