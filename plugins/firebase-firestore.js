@@ -5,8 +5,9 @@ import { firebase } from "~/plugins/firebase";
 let db = null;
 const queryDocUsers = "users";
 
-firebase().then((service) => {
-    db = service.firestore
+firebase().then((services) => {
+    console.log("services", services);
+    db = services.firestore;
 });
 
 

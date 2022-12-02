@@ -15,19 +15,18 @@ export const firebase = async () => {
       appId: res.data.APP_ID,
       measurementId: res.data.MEASUREMENT_ID
     }
-    initializeApp(firebaseConfig);
 
-    const firebaseGetService = {
+    const app = initializeApp(firebaseConfig);
+
+    const firebaseServices = {
       auth: getAuth(),
-      firestore: getFirestore(),
+      firestore: getFirestore(app),
       functions: getFunctions(getApp())
     }
 
-    return firebaseGetService;
+    return firebaseServices;
   });
 }
-
-firebase();
 
 /*
 export const firebase = async () => {

@@ -52,8 +52,8 @@ export const actions = {
                 idToken: cookie.idToken,
             }
 
-            await firebase().then(async (service) => {
-                const functions = service.functions;
+            await firebase().then(async (services) => {
+                const functions = services.functions;
                 const getEvents = httpsCallable(functions, "getEvents");
 
                 await getEvents(auth.uid).then((events) => {
