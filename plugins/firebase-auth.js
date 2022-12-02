@@ -12,8 +12,8 @@ import { addUser, checkUserExists } from "~/plugins/firebase-firestore";
 import { firebase } from "~/plugins/firebase";
 
 let auth = null;
-firebase().then((services) => {
-    auth = services.auth;
+firebase().then(async (services) => {
+    auth = await services.auth;
 })
 
 
