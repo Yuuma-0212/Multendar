@@ -11,13 +11,13 @@ import {
 import { addUser, checkUserExists } from "~/plugins/firebase-firestore";
 import { firebase } from "~/plugins/firebase";
 
-const getAuth = async () => {
+let auth = null;
+
+export default async () => {
     await firebase().then((services) => {
-        return services.auth;
+        auth = services.auth;
     });
 }
-
-const auth = getAuth();
 
 export const login = () => {
     const provider = new GoogleAuthProvider();
