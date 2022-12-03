@@ -14,7 +14,7 @@ import { firebase } from "~/plugins/firebase";
 let auth = null;
 
 export default async () => {
-    await firebase().then((services) => {
+    return await firebase().then((services) => {
         auth = services.auth;
     });
 }
