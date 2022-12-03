@@ -19,7 +19,7 @@ export const firebase = async () => {
     const app = initializeApp(firebaseConfig);
 
     const firebaseServices = {
-      auth: getAuth(),
+      auth: getAuth(app),
       firestore: getFirestore(app),
       functions: getFunctions(getApp())
     }

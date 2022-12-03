@@ -15,6 +15,7 @@ let auth = null;
 
 export default async () => {
     return await firebase().then((services) => {
+        console.log("services auth", services.auth);
         auth = services.auth;
     });
 }

@@ -7,7 +7,7 @@ const queryDocUsers = "users";
 
 export default async () => {
     return await firebase().then((services) => {
-        console.log("services", services);
+        console.log("services firestore", services.firestore);
         db = services.firestore;
     });
 }
