@@ -19,7 +19,7 @@ export const firebase = async () => {
     const app = initializeApp(firebaseConfig);
 
     const firebaseServices = {
-      auth: getAuth(app),
+      auth: getAuth(getApp()),
       firestore: getFirestore(app),
       functions: getFunctions(getApp())
     }
@@ -56,15 +56,4 @@ firebase().then((service) => {
   connectFunctionsEmulator(service.functions, 'localhost', 5001);
   connectFirestoreEmulator(service.firestore, 'localhost', 8080);
 });
-*/
-
-/*
-const auth = getAuth();
-const db = getFirestore();
-const functions = getFunctions(getApp(), "asia-northeast1");
-//export const getEvents = httpsCallable(functions, "getEvents");
-
-connectAuthEmulator(auth, "http://localhost:9099");
-connectFunctionsEmulator(functions, 'localhost', 5001);
-connectFirestoreEmulator(db, 'localhost', 8080);
 */
