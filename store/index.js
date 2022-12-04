@@ -2,7 +2,7 @@ export const strict = false;    // falseにしないとstateのeventsにpushで�
 import Cookie from "cookie";
 import { httpsCallable } from 'firebase/functions';
 import { firebase } from "~/plugins/firebase";
-//import { getEvents } from "~/plugins/firebase-firestore";
+import { getEvents } from "~/plugins/firebase-firestore";
 
 export const state = () => ({
     idToken: null,
@@ -54,7 +54,7 @@ export const actions = {
 
             await firebase().then(async (services) => {
                 const functions = services.functions;
-                const getEvents = httpsCallable(functions, "getEvents");
+                //const getEvents = httpsCallable(functions, "getEvents");
 
                 await getEvents(auth.uid).then((events) => {
                     if (events != undefined) dispatch("setEvents", events);
