@@ -57,6 +57,7 @@ export const actions = {
                 //const getEvents = httpsCallable(functions, "getEvents");
 
                 await getEvents(auth.uid).then((events) => {
+                    console.log(events);
                     if (events != undefined) dispatch("setEvents", events);
                 }).catch((error) => {
                     console.log("getEvents Error", error);
