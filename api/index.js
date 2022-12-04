@@ -132,7 +132,12 @@ app.get("/getFirebaseAdminEnv", (req, res) => {
     }
 
     res.send(serviceAccount);
-})
+});
+
+app.get("/getGmapKey", (req, res) => {
+    const mapsApiKey = process.env.GMAP_MAPS_API_KEY;
+    res.send(mapsApiKey);
+});
 
 module.exports = {
     path: "/api",
