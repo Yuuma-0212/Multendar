@@ -5,7 +5,7 @@ import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 import axios from "axios";
 
 export const firebase = async () => {
-  await axios.get("https://weather-scheduler-test.azurewebsites.net/api/getFirebaseEnv").then((res) => {
+  const firebaseServices = await axios.get("https://weather-scheduler-test.azurewebsites.net/api/getFirebaseEnv").then((res) => {
     const firebaseConfig = {
       apiKey: res.data.API_KEY,
       authDomain: res.data.AUTH_DOMAIN,
@@ -18,14 +18,16 @@ export const firebase = async () => {
 
     const app = initializeApp(firebaseConfig);
 
-    const firebaseServices = {
-      auth: getAuth(getApp()),
+    const services = {
+      auth: getAuth(),
       firestore: getFirestore(app),
       functions: getFunctions(getApp())
     }
 
-    return firebaseServices;
+    return services;
   });
+
+  return firebaseServices;
 }
 
 /*
