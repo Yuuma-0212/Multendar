@@ -1,11 +1,11 @@
-import { initializeApp, getApp } from "firebase/app";
+import { initializeApp, getApp, getApps } from "firebase/app";
 import { getFunctions, connectFunctionsEmulator, httpsCallable } from 'firebase/functions';
 import { getAuth, connectAuthEmulator } from "firebase/auth";
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 import axios from "axios";
 
 export const firebase = async () => {
-  const firebaseServices = await axios.get("https://weather-scheduler-test.azurewebsites.net/api/getFirebaseEnv").then((res) => {
+  await axios.get("https://weather-scheduler-test.azurewebsites.net/api/getFirebaseEnv").then((res) => {
     const firebaseConfig = {
       apiKey: res.data.API_KEY,
       authDomain: res.data.AUTH_DOMAIN,
@@ -16,18 +16,8 @@ export const firebase = async () => {
       measurementId: res.data.MEASUREMENT_ID
     }
 
-    const app = initializeApp(firebaseConfig);
-
-    const services = {
-      auth: getAuth(),
-      firestore: getFirestore(app),
-      functions: getFunctions(getApp())
-    }
-
-    return services;
+    initializeApp(firebaseConfig);
   });
-
-  return firebaseServices;
 }
 
 /*
@@ -43,19 +33,15 @@ export const firebase = async () => {
   }
 
   initializeApp(firebaseConfig);
-
-  const firebaseGetService = {
-    auth: getAuth(),
-    firestore: getFirestore(),
-    functions: getFunctions(getApp())
-  }
-
-  return firebaseGetService;
 }
 
-firebase().then((service) => {
-  connectAuthEmulator(service.auth, "http://localhost:9099");
-  connectFunctionsEmulator(service.functions, 'localhost', 5001);
-  connectFirestoreEmulator(service.firestore, 'localhost', 8080);
-});
+firebase();
+
+const auth = getAuth();
+const functions = getFunctions(getApp(), "asia-northeast1");
+const firestore = getFirestore();
+
+connectAuthEmulator(auth, "http://localhost:9099");
+connectFunctionsEmulator(functions, 'localhost', 5001);
+connectFirestoreEmulator(firestore, 'localhost', 8080);
 */

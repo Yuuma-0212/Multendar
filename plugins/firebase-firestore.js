@@ -1,16 +1,13 @@
 import cookie from "js-cookie";
-import { doc, setDoc, getDoc, updateDoc, arrayUnion, serverTimestamp } from "firebase/firestore";
+import { getFirestore, doc, setDoc, getDoc, updateDoc, arrayUnion, serverTimestamp } from "firebase/firestore";
 import { firebase } from "~/plugins/firebase";
 
 let db = null;
 const queryDocUsers = "users";
 
-export default async () => {
-    return await firebase().then((services) => {
-        console.log("services firestore", services);
-        db = services.firestore;
-    });
-}
+firebase().then(() => {
+    db = getFirestore();
+});
 
 export const checkUserExists = (async (uid) => {
     const docRef = doc(db, queryDocUsers, uid);

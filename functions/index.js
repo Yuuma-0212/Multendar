@@ -24,7 +24,8 @@ const db = getFirestore();
 const collUsers = "users";
 
 exports.getEvents = functions.region(region).https.onCall(async (data, context) => {
-    const eventsSnap = await db.collection(collUsers).doc(data.uid).get();
+    const uid = data;
+    const eventsSnap = await db.collection(collUsers).doc(uid).get();
     return eventsSnap;
 });
 

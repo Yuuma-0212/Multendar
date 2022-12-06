@@ -1,4 +1,5 @@
 import {
+    getAuth,
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
     GoogleAuthProvider,
@@ -13,12 +14,9 @@ import { firebase } from "~/plugins/firebase";
 
 let auth = null;
 
-export default async () => {
-    return await firebase().then((services) => {
-        console.log("services auth", services);
-        auth = services.auth;
-    });
-}
+firebase().then(() => {
+    auth = getAuth();
+});
 
 export const login = () => {
     const provider = new GoogleAuthProvider();
