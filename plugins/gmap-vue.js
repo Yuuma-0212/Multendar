@@ -2,6 +2,7 @@ import Vue from 'vue';
 import GmapVue from 'gmap-vue';
 import axios from "axios";
 
+/*
 Vue.use(GmapVue, {
   load: {
     // [REQUIRED] This is the unique required value by Google Maps API
@@ -38,8 +39,8 @@ Vue.use(GmapVue, {
   // Load the Google Maps API dynamically, if you set this to `true` the plugin doesn't load the Google Maps API
   //dynamicLoad: false,
 })
+*/
 
-/*
 export default async () => {
   await axios.get("https://weather-scheduler-test.azurewebsites.net/api/getGmapKey").then((res) => {
     const mapsApiKey = res.data;
@@ -47,8 +48,7 @@ export default async () => {
     Vue.use(GmapVue, {
       load: {
         // [REQUIRED] This is the unique required value by Google Maps API
-        //key: mapsApiKey,
-        key: process.env.MAPS_API_KEY,
+        key: mapsApiKey,
         // [OPTIONAL] This is required if you use the Autocomplete plugin
         // OR: libraries: 'places,drawing'
         // OR: libraries: 'places,drawing,visualization'
@@ -83,4 +83,3 @@ export default async () => {
     })
   })
 }
-*/
