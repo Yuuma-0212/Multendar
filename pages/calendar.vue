@@ -330,7 +330,7 @@
                     class="text-body-2"
                     clearable
                     v-model="title"
-                    :rules="[rules.title]"
+                    :rules="rules"
                     outlined
                     :dense="true"
                   ></v-text-field>
