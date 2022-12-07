@@ -637,9 +637,7 @@ export default {
       .toISOString()
       .substr(0, 10),
     title: "",
-    rules: [
-      (value) => !value || !value.match(/\S/g) || "タイトルを入力してください",
-    ],
+    rules: [(value) => value.match(/\S/g) || "タイトルを入力してください"],
     /*
     rules: {
       title: (value) => {
