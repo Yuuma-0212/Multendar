@@ -25,7 +25,7 @@ const collUsers = "users";
 
 exports.getEvents = functions.region(region).https.onCall(async (data, context) => {
     const uid = data;
-    const events = db.collection(collUsers).doc(uid).get().then((userSnap) => {
+    const events = await db.collection(collUsers).doc(uid).get().then((userSnap) => {
         const isUserExists = userSnap.exists;
         if (isUserExists) {
             return userSnap.data().events;
@@ -35,7 +35,7 @@ exports.getEvents = functions.region(region).https.onCall(async (data, context) 
     });
 
     return events;
-    
+
     /*
     const uid = data;
     const eventsSnap = await db.collection(collUsers).doc(uid).get();
