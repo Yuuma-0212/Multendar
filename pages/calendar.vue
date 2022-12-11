@@ -893,7 +893,7 @@ export default {
     async changeForecastArea(event) {
       this.isLoadingSelectedArea = true;
       await this.$axios
-        .$get("/getForecast", {
+        .$get("https://weather-scheduler-test.azurewebsites.net/api/getForecast", {
           params: {
             lat: event.lat,
             lon: event.lon,
