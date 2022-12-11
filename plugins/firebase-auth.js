@@ -14,12 +14,11 @@ import { firebase } from "~/plugins/firebase";
 
 let auth = null;
 
-export default (({ $config }) => {
-    console.log("$config", $config.axios.baseURL);
+export default () => {
     firebase().then(() => {
         auth = getAuth();
     });
-});
+};
 
 export const login = async () => {
     const provider = new GoogleAuthProvider();

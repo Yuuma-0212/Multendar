@@ -5,9 +5,11 @@ import { firebase } from "~/plugins/firebase";
 let db = null;
 const queryDocUsers = "users";
 
-firebase().then(() => {
-    db = getFirestore();
-});
+export default () => {
+    firebase().then(() => {
+        db = getFirestore();
+    });
+}
 
 export const checkUserExists = (async (uid) => {
     const docRef = doc(db, queryDocUsers, uid);

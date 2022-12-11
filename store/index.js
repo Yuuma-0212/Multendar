@@ -40,11 +40,6 @@ export const mutations = {
 
 export const actions = {
     async nuxtServerInit({ state, dispatch }, { app, req, res, redirect }) {
-        await app.$axios.$get("https://weather-scheduler-test.azurewebsites.net/api/getBaseURL").then((res) => {
-            const baseURL = res.data;
-            process.env.baseURL = baseURL + "/api";
-        });
-
         let selectedArea = {};
 
         // クッキーからデータを取得してストアに保持

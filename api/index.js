@@ -139,11 +139,6 @@ app.get("/getGmapKey", (req, res) => {
     res.send(mapsApiKey);
 });
 
-app.get("/getBaseURL", (req, res) => {
-    const baseURL = process.env.API_BASE_URL;
-    res.send(baseURL);
-})
-
 module.exports = {
     path: "/api",
     handler: app
