@@ -684,7 +684,7 @@ export default {
       JSON.stringify(this.$store.getters.getSelectedArea)
     );
     if (Object.keys(selectedArea).length) {
-      const forecast = await this.$axios.$get("/getForecast", {
+      const forecast = await this.$axios.$get("https://weather-scheduler-test.azurewebsites.net/api/getForecast", {
         params: {
           lat: selectedArea.lat,
           lon: selectedArea.lon,
