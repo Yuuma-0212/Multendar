@@ -14,8 +14,8 @@ import { firebase } from "~/plugins/firebase";
 
 let auth = null;
 
-export default ({context}) => {
-    console.log("context", context);
+export default ({env}) => {
+    console.log("context", env);
     firebase().then(() => {
         auth = getAuth();
     });
