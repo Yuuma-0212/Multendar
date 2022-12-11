@@ -41,8 +41,8 @@ Vue.use(GmapVue, {
 })
 */
 
-export default async () => {
-  await axios.get("https://weather-scheduler-test.azurewebsites.net/api/getGmapKey").then((res) => {
+export default async ({ $config }) => {
+  await axios.get($config.axios.baseURL + "/getGmapKey").then((res) => {
     const mapsApiKey = res.data;
 
     Vue.use(GmapVue, {

@@ -32,16 +32,16 @@ export const firebase = async () => {
     measurementId: process.env.MEASUREMENT_ID
   }
 
-  initializeApp(firebaseConfig);
+  if (!getApps().length) {
+    initializeApp(firebaseConfig);
+
+    const auth = getAuth();
+    const functions = getFunctions(getApp(), "asia-northeast1");
+    const firestore = getFirestore();
+
+    connectAuthEmulator(auth, "http://localhost:9099");
+    connectFunctionsEmulator(functions, 'localhost', 5001);
+    connectFirestoreEmulator(firestore, 'localhost', 8080);
+  }
 }
-
-firebase();
-
-const auth = getAuth();
-const functions = getFunctions(getApp(), "asia-northeast1");
-const firestore = getFirestore();
-
-connectAuthEmulator(auth, "http://localhost:9099");
-connectFunctionsEmulator(functions, 'localhost', 5001);
-connectFirestoreEmulator(firestore, 'localhost', 8080);
 */

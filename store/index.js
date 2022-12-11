@@ -54,11 +54,13 @@ export const actions = {
             }
 
             await firebase().then(async () => {
-                const functions = getFunctions(getApp());
+                const region = "asia-northeast1";
+                const functions = getFunctions(getApp(), region);
                 const getEvents = httpsCallable(functions, "getEvents");
 
-                await getEvents(auth.uid).then((events) => {
-                    console.log("events", events);
+                await getEvents(auth.uid).then((res) => {
+                    if (res.data == null) return; 
+                    const events = res.data.map(value => JSON.parse(value));
                     if (events != undefined) dispatch("setEvents", events);
                 }).catch((error) => {
                     console.log("getEvents Error", error);

@@ -5,12 +5,16 @@ const express = require("express");
 const axios = require("axios");
 const app = express();
 
-let serviceAccount = {};
+//let serviceAccount = {};
 
 if (!admin.apps.length) {
+    /*
     if (Object.keys(serviceAccount).length === 0) {
         serviceAccount = require("./weather-schedule-66b14-firebase-adminsdk-03da8-cd09df0bd8.json");
     }
+    */
+
+    const serviceAccount = require("./weather-schedule-66b14-firebase-adminsdk-03da8-cd09df0bd8.json");
 
     admin.initializeApp({
         projectId: "weather-schedule-66b14",

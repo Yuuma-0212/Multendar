@@ -11,12 +11,20 @@ firebase().then(() => {
 
 export const checkUserExists = (async (uid) => {
     const docRef = doc(db, queryDocUsers, uid);
+    const userExists = await getDoc(docRef).then((userSnap) => {
+        return userSnap.exists();
+    });
+
+    return userExists;
+
+    /*
     const userSnap = await getDoc(docRef);
 
     if (userSnap.exists()) {
         return true;
     }
     return false;
+    */
 });
 
 export const addUser = ((user, idToken) => {

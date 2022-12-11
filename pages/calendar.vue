@@ -143,7 +143,7 @@
                         <span>{{ day }}</span>
                       </v-btn>
                     </template>
-                    <template v-if="forecastWeek && forecastWeek.length">
+                    <template v-if="forecastWeek[date]">
                       <div class="calendar__weather-img-outer">
                         <img
                           class="calendar__weather-img"
@@ -171,7 +171,7 @@
                         <span>{{ day }}</span>
                       </v-btn>
                     </template>
-                    <template v-if="forecastWeek && forecastWeek.length">
+                    <template v-if="forecastWeek[date]">
                       <div class="calendar__weather-img-outer">
                         <img
                           class="calendar__weather-img"
@@ -330,7 +330,7 @@
                     class="text-body-2"
                     clearable
                     v-model="title"
-                    :rules="rules"
+                    :rules="[rules.title]"
                     outlined
                     :dense="true"
                   ></v-text-field>
@@ -608,7 +608,6 @@ import GmapAc from "~/components/GmapAc.vue";
 export default {
   components: { Contact, Gmap, GmapAc },
   name: "calendar",
-  async fetch() {},
   data: () => ({
     focus: null,
     type: "month",
@@ -637,18 +636,9 @@ export default {
       .toISOString()
       .substr(0, 10),
     title: "",
-    rules: v => v.match(/\S/g) || "タイトルを入力してください",
-    /*
     rules: {
-      title: (value) => {
-        if (!value || !value.match(/\S/g)) {
-          return "タイトルを入力してください";
-        } else {
-          return true;
-        }
-      },
+      title: (value) => /\S/g.test(value) || "タイトルを入力してください",
     },
-    */
     memo: "",
     notificationTime: "0",
     isNotification: true,
@@ -682,7 +672,7 @@ export default {
     isLoadingSelectedArea: false,
   }),
   async mounted() {
-    //this.$refs.calendar.checkChange();
+    this.$refs.calendar.checkChange();
     this.cWindowW = window.innerWidth;
 
     window.addEventListener("resize", () => {
@@ -690,8 +680,10 @@ export default {
     });
 
     // 天気予報を取得
-    const selectedArea = this.$store.getters.getSelectedArea;
-    if (selectedArea != undefined) {
+    const selectedArea = JSON.parse(
+      JSON.stringify(this.$store.getters.getSelectedArea)
+    );
+    if (Object.keys(selectedArea).length) {
       const forecast = await this.$axios.$get("/getForecast", {
         params: {
           lat: selectedArea.lat,
@@ -900,18 +892,20 @@ export default {
     },
     async changeForecastArea(event) {
       this.isLoadingSelectedArea = true;
-      const forecast = await this.$axios.$get("/getForecast", {
-        params: {
-          lat: event.lat,
-          lon: event.lon,
-        },
-      });
+      await this.$axios
+        .$get("/getForecast", {
+          params: {
+            lat: event.lat,
+            lon: event.lon,
+          },
+        })
+        .then((forecast) => {
+          this.forecastWeek = forecast.week;
+          this.forecastHour = forecast.hour;
+        });
 
-      //this.$store.dispatch("setSelectedArea", JSON.stringify(event));
       this.$cookies.set("selectedArea", JSON.stringify(event));
       this.isLoadingSelectedArea = false;
-      this.forecastWeek = forecast.week;
-      this.forecastHour = forecast.hour;
     },
     formatDate(date) {
       // YYYY-MM-DDにフォーマット
@@ -1036,6 +1030,12 @@ export default {
     &__calendar {
       height: 700px;
     }
+  }
+}
+
+@media #{map-get($display-breakpoints, 'sm-and-up')} {
+  .type-week {
+    width: 100%;
   }
 }
 </style>

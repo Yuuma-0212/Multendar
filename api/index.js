@@ -59,8 +59,8 @@ app.get("/getForecast", async (req, res) => {
         const tempMin = openWeather.data.daily[i].temp.min;
         const tempMax = openWeather.data.daily[i].temp.max;
 
-        forecastWeek[fDate.data] = {
-            date: fDate.data,
+        forecastWeek[fDate] = {
+            date: fDate,
             icon: `/img/weather_icon/${icon}.png`,
             tempMin: tempMin,
             tempMax: tempMax,
@@ -89,7 +89,7 @@ app.get("/getForecast", async (req, res) => {
         const hour = date.getHours();
         const icon = openWeather.data.hourly[i].weather[0].icon;
         const temp = openWeather.data.hourly[i].temp;
-        forecastHour[fDate.data + "-" + hour] = {
+        forecastHour[fDate + "-" + hour] = {
             icon: `/img/weather_icon/${icon}.png`,
             temp: temp,
         };
