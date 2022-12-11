@@ -14,8 +14,11 @@ import { firebase } from "~/plugins/firebase";
 
 let auth = null;
 
-firebase().then(() => {
-    auth = getAuth();
+export default (({ $config }) => {
+    console.log("$config", $config.axios.baseURL);
+    firebase().then(() => {
+        auth = getAuth();
+    });
 });
 
 export const login = async () => {
