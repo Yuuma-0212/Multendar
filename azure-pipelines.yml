@@ -10,16 +10,14 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
-- task: CmdLine@2
-  inputs:
-    script: |
-      export FIREBASE_MESSAGING_SENDER_ID=testenv
-      printenv
-
 - task: NodeTool@0
   inputs:
     versionSpec: '14.x'
   displayName: 'Install Node.js'
+
+- bash:
+  env:
+    FIREBASE_MESSAGING_SENDER_ID: $(FIREBASE_MESSAGING_SENDER_ID)
 
 - script: |
     npm install
