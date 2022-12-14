@@ -78,9 +78,9 @@ export const actions = {
             const isLogin = true;
             dispatch("setIsLogin", isLogin);
             dispatch("setSelectedArea", selectedArea);
-            redirect("/calendar");
+            //redirect("/calendar");
         } else {
-            redirect("/");
+            //redirect("/");
         }
     },
 

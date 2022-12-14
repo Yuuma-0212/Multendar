@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "nuxt",
     "build": "nuxt build",
+    "prebuild": "node ./static/foo.js && sw-env-build.js",
     "start": "./node_modules/nuxt-start/bin/nuxt-start.js",
     "generate": "nuxt generate"
   },

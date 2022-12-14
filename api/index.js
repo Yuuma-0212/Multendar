@@ -134,6 +134,11 @@ app.get("/getFirebaseAdminEnv", (req, res) => {
     res.send(serviceAccount);
 });
 
+app.get("/getVapidKey", (req, res) => {
+    const vapidKey = process.env.FIREBASE_PUBLIC_VAPID_KEY;
+    res.send(vapidKey);
+});
+
 app.get("/getGmapKey", (req, res) => {
     const mapsApiKey = process.env.GMAP_MAPS_API_KEY;
     res.send(mapsApiKey);
