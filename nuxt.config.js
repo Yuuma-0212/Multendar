@@ -31,12 +31,15 @@ export default {
   plugins: [
     '~/plugins/firebase.js',
     '~/plugins/firebase-auth.js',
-    '~/plugins/firebase-fcm.client.js',
     '~/plugins/firebase-firestore.js',
     '~/plugins/router.js',
     '~/plugins/areas.js',
     '~/plugins/gmap-vue.js',
     '~/plugins/fontawesome.js',
+    {
+      src: '~/plugins/firebase-fcm.js',
+      mode: 'client'
+    },
     {
       src: '~/plugins/vue-toastification.js',
       mode: 'client'
