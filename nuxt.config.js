@@ -31,7 +31,7 @@ export default {
   plugins: [
     '~/plugins/firebase.js',
     '~/plugins/firebase-auth.js',
-    '~/plugins/firebase-fcm',
+    '~/plugins/firebase-fcm.client.js',
     '~/plugins/firebase-firestore.js',
     '~/plugins/router.js',
     '~/plugins/areas.js',
