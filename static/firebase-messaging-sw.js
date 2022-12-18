@@ -1,7 +1,7 @@
 //import { initializeApp } from "firebase/app";
 //import { getMessaging, onBackgroundMessage } from "firebase/messaging/sw";
-importScripts("https://www.gstatic.com/firebasejs/9.11.0/firebase-app-compat.js");
-importScripts("https://www.gstatic.com/firebasejs/9.11.0/firebase-messaging-compat.js");
+importScripts("https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js");
+importScripts("https://www.gstatic.com/firebasejs/9.0.0/firebase-messaging-compat.js");
 importScripts("./static/sw-env.js");
 
 
