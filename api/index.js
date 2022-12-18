@@ -135,9 +135,7 @@ app.get("/getFirebaseAdminEnv", (req, res) => {
 });
 
 app.get("/getVapidKey", (req, res) => {
-    const vapidKey = {
-        vapidKey: process.env.FIREBASE_PUBLIC_VAPID_KEY
-    }
+    const vapidKey = process.env.FIREBASE_PUBLIC_VAPID_KEY;
     res.send(vapidKey);
 });
 
