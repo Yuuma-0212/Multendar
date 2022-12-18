@@ -1,12 +1,14 @@
-importScripts("https://www.gstatic.com/firebasejs/9.11.0/firebase-app-compat.js");
-importScripts("https://www.gstatic.com/firebasejs/9.11.0/firebase-messaging-compat.js");
-importScripts("./static/sw-env.js");
+import { initializeApp } from "firebase/app";
+import { getMessaging, onBackgroundMessage } from "firebase/messaging/sw";
+//importScripts("https://www.gstatic.com/firebasejs/9.11.0/firebase-app.js");
+//importScripts("https://www.gstatic.com/firebasejs/9.11.0/firebase-messaging.js");
+//importScripts("./static/sw-env.js");
 
 
-firebase.initializeApp(swEnv);
+const app = initializeApp(swEnv);
 
 // Retrieve an instance of Firebase Messaging so that it can handle background messages.
-const messaging = firebase.messaging();
+const messaging = getMessaging(app);
 
 // 通知を受けとると push イベントが呼び出される。
 self.addEventListener(
@@ -32,7 +34,7 @@ self.addEventListener(
 );
 
 // WEBアプリがバックグラウンドの場合にはsetBackGroundMessageHandlerが呼び出される。
-messaging.setBackgroundMessageHandler(function (payload) {
+onBackgroundMessage(messaging, (payload) => {
     console.log("backgroundMessage");
 
     return self.registration.showNotification(payload.title, {
