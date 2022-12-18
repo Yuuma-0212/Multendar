@@ -1,14 +1,12 @@
-import { initializeApp } from "firebase";
-import { messaging } from "firebase/messaging"
-//importScripts("https://www.gstatic.com/firebasejs/9.11.0/firebase-app.js");
-//importScripts("https://www.gstatic.com/firebasejs/9.11.0/firebase-messaging.js");
-//importScripts("./static/sw-env.js");
+importScripts("https://www.gstatic.com/firebasejs/9.11.0/firebase-app-compat.js");
+importScripts("https://www.gstatic.com/firebasejs/9.11.0/firebase-messaging-compat.js");
+importScripts("./static/sw-env.js");
 
 
-initializeApp(swEnv);
+firebase.initializeApp(swEnv);
 
 // Retrieve an instance of Firebase Messaging so that it can handle background messages.
-const messaging = messaging();
+const messaging = firebase.messaging();
 
 // 通知を受けとると push イベントが呼び出される。
 self.addEventListener(

@@ -12,9 +12,7 @@ firebase().then(async () => {
     Notification.requestPermission().then(async (permission) => {
         if (permission === "granted") {
             await axios.get("https://weather-scheduler-test.azurewebsites.net/api/getVapidKey").then(async (res) => {
-                const vapidKey = res.data;
-                console.log("getVapidKey", vapidKey);
-                await getToken(messaging, vapidKey).then((currentToken) => {
+                await getToken(messaging, { vapidKey: res.data }).then((currentToken) => {
                     if (currentToken) {
                         console.log("currentToken", currentToken);
                         // Send the token to your server and update the UI if necessary
