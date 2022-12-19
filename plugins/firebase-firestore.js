@@ -65,6 +65,30 @@ export const getEvents = (async (uid) => {
     }
 });
 
+export const setFcmToken = (async (fcmToken) => {
+    const uid = cookie.get("uid");
+    const userRef = doc(db, queryDocUsers, uid);
+
+    await updateDoc(userRef, {
+        fcmToken: {
+            token: fcmToken,
+            timestamp: serverTimestamp()
+        }
+    }).then(() => {
+        return;
+    }).catch((error) => {
+        throw new Error(error);
+    });
+})
+
+export const getFcmToken = (async () => {
+    const userRef = doc(db, queryDocUsers, uid);
+    const userSnap = await getDoc(userRef);
+    if (userSnap.exists()) {
+        return userSnap.data().fcmToken.token;
+    }
+})
+
 /*
 export const checkUserExists = ((uid) => {
     const isUserExists = callCheckUserExists(uid).then((res) => {

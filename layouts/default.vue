@@ -9,7 +9,7 @@
 <script>
 import Header from "~/components/Header.vue";
 import Footer from "~/components/Footer.vue";
-import { sendNotification } from "~/plugins/firebase-fcm.js";
+import {getFcmToken} from "~/plugins/firebase-firestore.js";
 
 export default {
   name: "DefaultLayout",
@@ -27,10 +27,18 @@ export default {
         });
     }
   },
-  mounted() {
+  async mounted() {
     const title = "testTitle";
     const body = "hello fcm";
-    sendNotification(title, body);
+    await this.$axios.$get("https://weather-scheduler-test.azurewebsites.net/api/getFirebaseEnv").then(async (res) => {
+      const projectId = res.data.PROJECT_ID;
+      console.log("projectId", projectId);
+      const fcmToken = await getFcmToken();
+      console.log("fcmToken", fcmToken);
+      console.log("fcmToken.data", fcmToken.data);
+      const fcmSendUrl = "https://fcm.googleapis.com//v1/projects/" + projectId + "/messages:send";
+      //this.$axios.$post(fcmSendUrl)
+    })
   }
 };
 </script>

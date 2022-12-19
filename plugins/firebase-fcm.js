@@ -1,8 +1,7 @@
 import { getMessaging, getToken, isSupported } from "firebase/messaging";
-import { firebase } from "~/plugins/firebase";
+import { firebase } from "~/plugins/firebase.js";
+import { setFcmToken } from "~/plugins/firebase-firestore.js";
 import axios from "axios";
-
-let messaging;
 
 export default () => {
     firebase().then(async () => {
@@ -11,15 +10,14 @@ export default () => {
             return; // ブラウザが対応していなければエラーが発生するため
         }
 
-        messaging = getMessaging();
+        const messaging = getMessaging();
         Notification.requestPermission().then(async (permission) => {
             if (permission === "granted") {
                 await axios.get("https://weather-scheduler-test.azurewebsites.net/api/getVapidKey").then(async (res) => {
                     await getToken(messaging, { vapidKey: res.data }).then((currentToken) => {
                         if (currentToken) {
                             console.log("currentToken", currentToken);
-                            // Send the token to your server and update the UI if necessary
-                            // ...
+                            setFcmToken(currentToken);
                         } else {
                             // Show permission request UI
                             console.log('No registration token available. Request permission to generate one.');
@@ -32,19 +30,4 @@ export default () => {
             }
         })
     });
-}
-
-export const sendNotification = (title, body) => {
-    const message = {
-        notification: {
-            title: title,
-            body: body
-        }
-    }
-
-    messaging.send(message).then((res) => {
-        console.log("Successfully sent message", res);
-    }).catch((error) => {
-        console.log("Error sending message", error);
-    })
 }
