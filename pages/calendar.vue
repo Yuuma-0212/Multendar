@@ -608,6 +608,38 @@ import GmapAc from "~/components/GmapAc.vue";
 export default {
   components: { Contact, Gmap, GmapAc },
   name: "calendar",
+  async asyncData({ $axios }) {
+    // fcmのswを登録する
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker
+        .register("../static/firebase-messaging-sw.js")
+        .then(function (registration) {
+          console.log("Registration successful, scope is:", registration.scope);
+        })
+        .catch(function (error) {
+          console.log("Service worker registration failed, error:", error);
+        });
+    }
+
+    const title = "testTitle";
+    const body = "hello fcm";
+    await $axios
+      .$get(
+        "https://weather-scheduler-test.azurewebsites.net/api/getFirebaseEnv"
+      )
+      .then(async (res) => {
+        console.log("projectId", res.data);
+        const firebaseConfig = res.data.PROJECT_ID;
+        const fcmToken = await getFcmToken();
+        console.log("fcmToken", fcmToken);
+        console.log("fcmToken.data", fcmToken.data);
+        const fcmSendUrl =
+          "https://fcm.googleapis.com//v1/projects/" +
+          firebaseConfig.PROJECT_ID +
+          "/messages:send";
+        //this.$axios.$post(fcmSendUrl)
+      });
+  },
   data: () => ({
     focus: null,
     type: "month",
@@ -684,12 +716,15 @@ export default {
       JSON.stringify(this.$store.getters.getSelectedArea)
     );
     if (Object.keys(selectedArea).length) {
-      const forecast = await this.$axios.$get("https://weather-scheduler-test.azurewebsites.net/api/getForecast", {
-        params: {
-          lat: selectedArea.lat,
-          lon: selectedArea.lon,
-        },
-      });
+      const forecast = await this.$axios.$get(
+        "https://weather-scheduler-test.azurewebsites.net/api/getForecast",
+        {
+          params: {
+            lat: selectedArea.lat,
+            lon: selectedArea.lon,
+          },
+        }
+      );
 
       this.selectedArea = selectedArea;
       this.forecastWeek = forecast.week;
@@ -893,12 +928,15 @@ export default {
     async changeForecastArea(event) {
       this.isLoadingSelectedArea = true;
       await this.$axios
-        .$get("https://weather-scheduler-test.azurewebsites.net/api/getForecast", {
-          params: {
-            lat: event.lat,
-            lon: event.lon,
-          },
-        })
+        .$get(
+          "https://weather-scheduler-test.azurewebsites.net/api/getForecast",
+          {
+            params: {
+              lat: event.lat,
+              lon: event.lon,
+            },
+          }
+        )
         .then((forecast) => {
           this.forecastWeek = forecast.week;
           this.forecastHour = forecast.hour;
