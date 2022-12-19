@@ -31,8 +31,8 @@ export default {
     const title = "testTitle";
     const body = "hello fcm";
     await this.$axios.$get("https://weather-scheduler-test.azurewebsites.net/api/getFirebaseEnv").then(async (res) => {
-      const firebaseConfig = JSON.parse(JSON.stringify(res.data));
-      console.log("projectId", firebaseConfig);
+      console.log("projectId", res.data);
+      const firebaseConfig = res.data.PROJECT_ID;
       const fcmToken = await getFcmToken();
       console.log("fcmToken", fcmToken);
       console.log("fcmToken.data", fcmToken.data);
