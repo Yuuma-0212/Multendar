@@ -9,14 +9,14 @@
 <script>
 import Header from "~/components/Header.vue";
 import Footer from "~/components/Footer.vue";
+import { sendNotification } from "~/plugins/firebase-fcm.js";
 
 export default {
   name: "DefaultLayout",
   components: { Header, Footer },
   asyncData() {
-    console.log("default asyncData");
+    // fcmのswを登録する
     if ("serviceWorker" in navigator) {
-      console.log("service worker register");
       navigator.serviceWorker
         .register("../static/firebase-messaging-sw.js")
         .then(function (registration) {
@@ -27,5 +27,10 @@ export default {
         });
     }
   },
+  mounted() {
+    const title = "testTitle";
+    const body = "hello fcm";
+    sendNotification(title, body);
+  }
 };
 </script>
