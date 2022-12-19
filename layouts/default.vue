@@ -31,12 +31,12 @@ export default {
     const title = "testTitle";
     const body = "hello fcm";
     await this.$axios.$get("https://weather-scheduler-test.azurewebsites.net/api/getFirebaseEnv").then(async (res) => {
-      const projectId = res.data.PROJECT_ID;
-      console.log("projectId", projectId);
+      const firebaseConfig = JSON.parse(JSON.stringify(res.data));
+      console.log("projectId", firebaseConfig);
       const fcmToken = await getFcmToken();
       console.log("fcmToken", fcmToken);
       console.log("fcmToken.data", fcmToken.data);
-      const fcmSendUrl = "https://fcm.googleapis.com//v1/projects/" + projectId + "/messages:send";
+      const fcmSendUrl = "https://fcm.googleapis.com//v1/projects/" + firebaseConfig.PROJECT_ID + "/messages:send";
       //this.$axios.$post(fcmSendUrl)
     })
   }
