@@ -609,18 +609,6 @@ export default {
   components: { Contact, Gmap, GmapAc },
   name: "calendar",
   async asyncData({ $axios }) {
-    // fcmのswを登録する
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker
-        .register("../static/firebase-messaging-sw.js")
-        .then(function (registration) {
-          console.log("Registration successful, scope is:", registration.scope);
-        })
-        .catch(function (error) {
-          console.log("Service worker registration failed, error:", error);
-        });
-    }
-
     const title = "testTitle";
     const body = "hello fcm";
     await $axios
@@ -706,6 +694,18 @@ export default {
   async mounted() {
     this.$refs.calendar.checkChange();
     this.cWindowW = window.innerWidth;
+
+    // fcmのswを登録する
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker
+        .register("../static/firebase-messaging-sw.js")
+        .then(function (registration) {
+          console.log("Registration successful, scope is:", registration.scope);
+        })
+        .catch(function (error) {
+          console.log("Service worker registration failed, error:", error);
+        });
+    }
 
     window.addEventListener("resize", () => {
       this.cWindowW = window.innerWidth;
