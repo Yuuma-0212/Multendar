@@ -12,6 +12,20 @@ import Footer from "~/components/Footer.vue";
 
 export default {
   name: "DefaultLayout",
-  components: { Header, Footer }
+  components: { Header, Footer },
+  asyncData() {
+    console.log("default asyncData");
+    if ("serviceWorker" in navigator) {
+      console.log("service worker register");
+      navigator.serviceWorker
+        .register("../static/firebase-messaging-sw.js")
+        .then(function (registration) {
+          console.log("Registration successful, scope is:", registration.scope);
+        })
+        .catch(function (error) {
+          console.log("Service worker registration failed, error:", error);
+        });
+    }
+  },
 };
 </script>

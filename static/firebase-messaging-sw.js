@@ -8,7 +8,7 @@ importScripts("./sw-env.js");
 firebase.initializeApp(swEnv);
 
 // Retrieve an instance of Firebase Messaging so that it can handle background messages.
-const messaging = firebase.messaging(app);
+const messaging = firebase.messaging();
 
 // 通知を受けとると push イベントが呼び出される。
 self.addEventListener(
