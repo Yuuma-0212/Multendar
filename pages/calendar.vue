@@ -601,6 +601,7 @@
 <script>
 import { addEvent } from "~/plugins/firebase-firestore.js";
 import { areas } from "~/plugins/areas.js";
+import { getFcmToken } from "~/plugins/firebase-firestore.js";
 import Contact from "~/components/Contact.vue";
 import Gmap from "~/components/Gmap.vue";
 import GmapAc from "~/components/GmapAc.vue";
@@ -616,7 +617,7 @@ export default {
         "https://weather-scheduler-test.azurewebsites.net/api/getFirebaseEnv"
       )
       .then(async (res) => {
-        console.log("projectId", res.data);
+        console.log("projectId", res);
         const firebaseConfig = res.data.PROJECT_ID;
         const fcmToken = await getFcmToken();
         console.log("fcmToken", fcmToken);
