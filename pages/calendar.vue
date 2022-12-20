@@ -618,13 +618,13 @@ export default {
       )
       .then(async (res) => {
         console.log("projectId", res);
-        const firebaseConfig = res.data.PROJECT_ID;
+        const projectId = res.PROJECT_ID;
         const fcmToken = await getFcmToken();
         console.log("fcmToken", fcmToken);
         console.log("fcmToken.data", fcmToken.data);
         const fcmSendUrl =
           "https://fcm.googleapis.com//v1/projects/" +
-          firebaseConfig.PROJECT_ID +
+          projectId +
           "/messages:send";
         //this.$axios.$post(fcmSendUrl)
       });
