@@ -619,7 +619,8 @@ export default {
       .then(async (res) => {
         console.log("projectId", res);
         const projectId = res.PROJECT_ID;
-        const fcmToken = await getFcmToken();
+        const uid = this.$cookies.get("uid");
+        const fcmToken = await getFcmToken(uid);
         console.log("fcmToken", fcmToken);
         console.log("fcmToken.data", fcmToken.data);
         const fcmSendUrl =

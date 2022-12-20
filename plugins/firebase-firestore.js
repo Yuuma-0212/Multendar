@@ -81,7 +81,7 @@ export const setFcmToken = (async (fcmToken) => {
     });
 })
 
-export const getFcmToken = (async () => {
+export const getFcmToken = (async (uid) => {
     const userRef = doc(db, queryDocUsers, uid);
     const userSnap = await getDoc(userRef);
     if (userSnap.exists()) {
