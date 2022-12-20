@@ -609,7 +609,7 @@ import GmapAc from "~/components/GmapAc.vue";
 export default {
   components: { Contact, Gmap, GmapAc },
   name: "calendar",
-  async asyncData({ $axios, $cookie }) {
+  async asyncData({ $axios, $cookies }) {
     const title = "testTitle";
     const body = "hello fcm";
     await $axios
@@ -619,7 +619,7 @@ export default {
       .then(async (res) => {
         console.log("projectId", res);
         const projectId = res.PROJECT_ID;
-        const uid = $cookie.get("uid");
+        const uid = $cookies.get("uid");
         const fcmToken = await getFcmToken(uid);
         console.log("fcmToken", fcmToken);
         console.log("fcmToken.data", fcmToken.data);
