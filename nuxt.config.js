@@ -93,7 +93,8 @@ export default {
         fs: 'empty',
         googleapis: 'empty',
         child_process: 'empty',
-        net: 'empty'
+        net: 'empty',
+        tls: 'empty'
       }
     }
   },
