@@ -87,6 +87,14 @@ export default {
           fiber: require('fibers')
         }
       }
+    },
+    extend(config, ctx) {
+      // 以下を追記
+      config.node = {
+        fs: 'empty',
+        googleapis: 'empty',
+        child_process: 'empty'
+      }
     }
   },
 
