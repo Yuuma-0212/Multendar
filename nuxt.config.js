@@ -92,7 +92,8 @@ export default {
       config.node = {
         fs: 'empty',
         googleapis: 'empty',
-        child_process: 'empty'
+        child_process: 'empty',
+        net: 'empty'
       }
     }
   },
