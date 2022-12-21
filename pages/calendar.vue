@@ -605,7 +605,7 @@ import { getFcmToken } from "~/plugins/firebase-firestore.js";
 import Contact from "~/components/Contact.vue";
 import Gmap from "~/components/Gmap.vue";
 import GmapAc from "~/components/GmapAc.vue";
-import { google } from "googleapis";
+import { JWT } from "google-auth-library";
 
 export default {
   components: { Contact, Gmap, GmapAc },
@@ -718,7 +718,7 @@ export default {
         "https://weather-scheduler-test.azurewebsites.net/api/getFirebaseAdminServiceAccount"
       );
       console.log("serviceAccount", key);
-      const jwtClient = new google.auth.JWT(
+      const jwtClient = new JWT(
         key.client_email,
         null,
         key.private_key,

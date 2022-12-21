@@ -89,7 +89,6 @@ export default {
       }
     },
     extend(config, ctx) {
-      // 以下を追記
       config.node = {
         fs: 'empty',
         googleapis: 'empty',
