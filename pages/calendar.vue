@@ -605,31 +605,12 @@ import { getFcmToken } from "~/plugins/firebase-firestore.js";
 import Contact from "~/components/Contact.vue";
 import Gmap from "~/components/Gmap.vue";
 import GmapAc from "~/components/GmapAc.vue";
+import { google } from "googleapis";
 
 export default {
   components: { Contact, Gmap, GmapAc },
   name: "calendar",
-  async asyncData({ $axios, $cookies }) {
-    const title = "testTitle";
-    const body = "hello fcm";
-    await $axios
-      .$get(
-        "https://weather-scheduler-test.azurewebsites.net/api/getFirebaseEnv"
-      )
-      .then(async (res) => {
-        console.log("projectId", res);
-        const projectId = res.PROJECT_ID;
-        const uid = $cookies.get("uid");
-        const fcmToken = await getFcmToken(uid);
-        console.log("fcmToken", fcmToken);
-        console.log("fcmToken.data", fcmToken.data);
-        const fcmSendUrl =
-          "https://fcm.googleapis.com//v1/projects/" +
-          projectId +
-          "/messages:send";
-        //this.$axios.$post(fcmSendUrl)
-      });
-  },
+  async asyncData({ $axios, $cookies }) {},
   data: () => ({
     focus: null,
     type: "month",
@@ -697,18 +678,6 @@ export default {
     this.$refs.calendar.checkChange();
     this.cWindowW = window.innerWidth;
 
-    // fcmのswを登録する
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker
-        .register("../static/firebase-messaging-sw.js")
-        .then(function (registration) {
-          console.log("Registration successful, scope is:", registration.scope);
-        })
-        .catch(function (error) {
-          console.log("Service worker registration failed, error:", error);
-        });
-    }
-
     window.addEventListener("resize", () => {
       this.cWindowW = window.innerWidth;
     });
@@ -743,6 +712,57 @@ export default {
     });
     */
     this.dateToday = dateToday;
+
+    const getAccessToken = async () => {
+      const SCOPES = "https://www.googleapis.com/auth/firebase.messaging";
+      const key = await this.$axios.$get(
+        "https://weather-scheduler-test.azurewebsites.net/api/getFirebaseAdminServiceAccount"
+      );
+      console.log("serviceAccount", key);
+      const jwtClient = new google.auth.JWT(
+        key.client_email,
+        null,
+        key.private_key,
+        SCOPES,
+        null
+      );
+      jwtClient.authorize((error, tokens) => {
+        if (error) throw new Error(error);
+        return tokens.access_token;
+      });
+    };
+
+    const title = "testTitle";
+    const body = "hello fcm";
+    await this.$axios
+      .$get(
+        "https://weather-scheduler-test.azurewebsites.net/api/getFirebaseEnv"
+      )
+      .then(async (res) => {
+        const projectId = res.PROJECT_ID;
+        const uid = this.$cookies.get("uid");
+        const fcmToken = await getFcmToken(uid);
+        const fcmSendUrl =
+          "https://fcm.googleapis.com/v1/projects/" +
+          projectId +
+          "/messages:send";
+        const message = {
+          message: {
+            token: fcmToken,
+            notification: {
+              title: title,
+              body: body,
+            },
+          },
+        };
+        const accessToken = await getAccessToken();
+        console.log("accessToken", accessToken);
+        await this.$axios.$post(fcmSendUrl, message, {
+          headers: {
+            Authorization: "Bearer " + accessToken,
+          },
+        });
+      });
   },
   created() {
     this.areas = areas;

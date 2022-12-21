@@ -26,6 +26,7 @@
     "fibers": "^5.0.1",
     "firebase": "^9.11.0",
     "gmap-vue": "^3.5.4",
+    "googleapis": "^109.0.1",
     "js-cookie": "^3.0.1",
     "nuxt": "^2.15.8",
     "nuxt-fontawesome": "^0.4.0",
