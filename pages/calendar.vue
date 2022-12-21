@@ -610,7 +610,6 @@ import { google } from "googleapis";
 export default {
   components: { Contact, Gmap, GmapAc },
   name: "calendar",
-  async asyncData({ $axios, $cookies }) {},
   data: () => ({
     focus: null,
     type: "month",
