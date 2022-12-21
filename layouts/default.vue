@@ -13,7 +13,7 @@ import Footer from "~/components/Footer.vue";
 export default {
   name: "DefaultLayout",
   components: { Header, Footer },
-  mounted() {
+  asyncData() {
     // fcmのswを登録する
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker
