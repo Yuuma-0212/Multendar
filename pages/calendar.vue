@@ -717,7 +717,7 @@ export default {
       const key = await this.$axios.$get(
         "https://weather-scheduler-test.azurewebsites.net/api/getFirebaseAdminServiceAccount"
       );
-      console.log("serviceAccount", key);
+      console.log("serviceAccount", key.client_email);
       const jwtClient = new JWT(
         key.client_email,
         null,
@@ -727,6 +727,7 @@ export default {
       );
       jwtClient.authorize((error, tokens) => {
         if (error) throw new Error(error);
+        console.log("authorize", tokens.access_token);
         return tokens.access_token;
       });
     };
