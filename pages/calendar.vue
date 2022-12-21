@@ -605,7 +605,7 @@ import { getFcmToken } from "~/plugins/firebase-firestore.js";
 import Contact from "~/components/Contact.vue";
 import Gmap from "~/components/Gmap.vue";
 import GmapAc from "~/components/GmapAc.vue";
-const { google } = require("googleapis");
+import { google } from "googleapis";
 
 export default {
   components: { Contact, Gmap, GmapAc },
