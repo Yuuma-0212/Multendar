@@ -713,7 +713,8 @@ export default {
     this.dateToday = dateToday;
 
     const getAccessToken = async () => {
-      const SCOPES = "https://www.googleapis.com/auth/firebase.messaging";
+      const messagingScope = "https://www.googleapis.com/auth/firebase.messaging";
+      const scopes = [messagingScope];
       const key = await this.$axios.$get(
         "https://weather-scheduler-test.azurewebsites.net/api/getFirebaseAdminServiceAccount"
       );
@@ -722,7 +723,7 @@ export default {
         key.client_email,
         null,
         key.private_key,
-        SCOPES,
+        scopes,
         null
       );
       jwtClient.authorize((error, tokens) => {
