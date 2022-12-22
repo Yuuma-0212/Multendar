@@ -755,12 +755,15 @@ export default {
             },
           },
         };
-        const accessToken = await getAccessToken();
-        console.log("accessToken", accessToken);
-        await this.$axios.$post(fcmSendUrl, message, {
-          headers: {
-            Authorization: "Bearer " + accessToken,
-          },
+        await getAccessToken().then(async (accessToken) => {
+          console.log("accessToken", accessToken);
+          await this.$axios.$post(fcmSendUrl, message, {
+            headers: {
+              Authorization: "Bearer " + accessToken,
+            },
+          }).catch((error) => {
+            console.log("accessToken Error", accessToken);
+          });
         });
       });
   },
