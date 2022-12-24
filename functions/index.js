@@ -1,7 +1,7 @@
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 const { getFirestore, Firestore } = require("firebase-admin/firestore");
-const { Messaging } = require("firebase-admin/messaging");
+const messaging = require("firebase-admin/messaging");
 const express = require("express");
 const axios = require("axios");
 //const app = express();
@@ -92,7 +92,7 @@ exports.sendMessage = functions.region(region).https.onCall(async (data) => {
         }
     }
 
-    await Messaging.send(message);
+    await admin.messaging().send(message);
 });
 
 /*
