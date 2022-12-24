@@ -711,7 +711,7 @@ export default {
       const region = "asia-northeast1";
       const functions = getFunctions(getApp(), region);
       const sendMessage = httpsCallable(functions, "sendMessage");
-      sendMessage(uid);
+      await sendMessage(uid);
     });
   },
   created() {
