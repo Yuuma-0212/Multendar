@@ -728,7 +728,7 @@ export default {
       );
       console.log("jwt", jwtClient);
       jwtClient.authorize((error, tokens) => {
-        console.log("authorize error", error);
+        console.log("authorize tokens", tokens);
         console.log("authorize", tokens.access_token);
         if (error) throw new Error(error);
         return tokens.access_token;
