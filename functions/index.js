@@ -6,16 +6,28 @@ const express = require("express");
 const axios = require("axios");
 //const app = express();
 
-//let serviceAccount = {};
+let serviceAccount = {};
 
 if (!admin.apps.length) {
-    /*
-    if (Object.keys(serviceAccount).length === 0) {
-        serviceAccount = require("./weather-schedule-66b14-firebase-adminsdk-03da8-cd09df0bd8.json");
-    }
-    */
-
-    const serviceAccount = require("./weather-schedule-66b14-firebase-adminsdk-03da8-cd09df0bd8.json");
+    serviceAccount = require("./weather-schedule-66b14-firebase-adminsdk-03da8-cd09df0bd8.json");
+    axios.get("https://weather-scheduler-test.azurewebsites.net/api/getFirebaseAdminServiceAccount")
+        .then((res) => {
+            serviceAccount = {
+                type: res.data.FIREBASE_ADMIN_TYPE,
+                project_id: res.data.FIREBASE_ADMIN_PROJECT_ID,
+                private_key_id: res.data.FIREBASE_ADMIN_PRIVATE_KEY_ID,
+                private_key: res.data.FIREBASE_ADMIN_PRIVATE_KEY,
+                client_email: res.data.FIREBASE_ADMIN_CLIENT_EMAIL,
+                client_id: res.data.FIREBASE_ADMIN_CLIENT_ID,
+                auth_uri: res.data.FIREBASE_ADMIN_AUTH_URI,
+                token_uri: res.data.FIREBASE_ADMIN_TOKEN_URI,
+                auth_provider_x509_cert_url: res.data.FIREBASE_ADMIN_AUTH_PROVIDER_X509_CERT_URL,
+                client_x509_cert_url: res.data.FIREBASE_ADMIN_CLIENT_X509_CERT_URL
+            };
+        })
+        .catch((error) => {
+            console.log(error);
+        });
 
     admin.initializeApp({
         projectId: "weather-schedule-66b14",
