@@ -706,6 +706,7 @@ export default {
     const dateToday = this.formatDate(date);
     this.dateToday = dateToday;
 
+    /*
     const uid = this.$cookies.get("uid");
     await firebase().then(async () => {
       const region = "asia-northeast1";
@@ -713,6 +714,7 @@ export default {
       const sendMessage = httpsCallable(functions, "sendMessage");
       await sendMessage(uid);
     });
+    */
   },
   created() {
     this.areas = areas;
