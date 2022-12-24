@@ -726,6 +726,7 @@ export default {
         scopes,
         null
       );
+      console.log("jwt", jwtClient);
       jwtClient.authorize((error, tokens) => {
         console.log("authorize error", error);
         console.log("authorize", tokens.access_token);
