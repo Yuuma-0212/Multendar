@@ -1,9 +1,10 @@
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 const { getFirestore, Firestore } = require("firebase-admin/firestore");
+const { Messaging } = require("firebase-admin/messaging");
 const express = require("express");
 const axios = require("axios");
-const app = express();
+//const app = express();
 
 //let serviceAccount = {};
 
@@ -31,9 +32,8 @@ exports.getEvents = functions.region(region).https.onCall(async (data, context) 
     const uid = data;
     const events = await db.collection(collUsers).doc(uid).get().then((userSnap) => {
         const isUserExists = userSnap.exists;
-        if (isUserExists) {
-            return userSnap.data().events;
-        }
+        if (!isUserExists) return;
+        return userSnap.data().events;
     }).catch((error) => {
         throw new Error(error);
     });
@@ -48,64 +48,56 @@ exports.getEvents = functions.region(region).https.onCall(async (data, context) 
 });
 
 /*
-exports.callCheckUserExists = functions.region(region).https.onCall((data, context) => {
-    const isUserExists = db.collection(collUsers).doc(data).get().then((snapshot) => {
-        return snapshot.exists;
-    }).catch((error) => {
-        throw new Error(error);
-    });
-
-    return isUserExists;
-});
-
-exports.callAddUser = functions.region(region).https.onCall((data, context) => {
-    const userData = {
-        name: data.name,
-        email: data.email,
-        idToken: data.idToken,
-        timestamp: Firestore.FieldValue.serverTimestamp()
-    }
-
-    const setUser = db.collection(collUsers).doc(data.uid).set(userData).then(() => {
-        return;
-    }).catch((error) => {
-        throw new Error(error);
-    });
-
-    return setUser;
-});
-
-exports.callAddEvent = functions.region(region).https.onCall((data, context) => {
-    const events = {
-        events: Firestore.FieldValue.arrayUnion(JSON.stringify(data.event)),
-        timestamp: Firestore.FieldValue.serverTimestamp()
-    }
-
-    const eventUpdate = db.collection(collUsers).doc(data.uid).update(events).then(() => {
-        return;
-    }).catch((error) => {
-        throw new Error(error);
-    });
-
-    return eventUpdate;
-});
-
-exports.callGetEvents = functions.region(region).https.onCall((data, context) => {
-    const getEvents = db.collection(collUsers).doc(data).get().then((userSnap) => {
-        const isUserExists = userSnap.exists;
-        if (isUserExists) {
-            return userSnap.data().events;
-        }
-    }).catch((error) => {
-        throw new Error(error);
-    });
-
-    return getEvents;
+exports.setFirebaseAdminServiceAccount = functions.region(region).https.onCall(async () => {
+    await axios.get("https://weather-scheduler-test.azurewebsites.net/api/getFirebaseAdminServiceAccount")
+        .then((res) => {
+            serviceAccount = {
+                type: res.data.FIREBASE_ADMIN_TYPE,
+                project_id: res.data.FIREBASE_ADMIN_PROJECT_ID,
+                private_key_id: res.data.FIREBASE_ADMIN_PRIVATE_KEY_ID,
+                private_key: res.data.FIREBASE_ADMIN_PRIVATE_KEY,
+                client_email: res.data.FIREBASE_ADMIN_CLIENT_EMAIL,
+                client_id: res.data.FIREBASE_ADMIN_CLIENT_ID,
+                auth_uri: res.data.FIREBASE_ADMIN_AUTH_URI,
+                token_uri: res.data.FIREBASE_ADMIN_TOKEN_URI,
+                auth_provider_x509_cert_url: res.data.FIREBASE_ADMIN_AUTH_PROVIDER_X509_CERT_URL,
+                client_x509_cert_url: res.data.FIREBASE_ADMIN_CLIENT_X509_CERT_URL
+            };
+        })
+        .catch((error) => {
+            console.log(error);
+        });
 });
 */
 
-app.get("/getFirebaseAdminEnv", async (req, res) => {
-    await axios.get("https://weather-scheduler-test.azurewebsites.net/api/getFirebaseAdminEnv")
+exports.sendMessage = functions.region(region).https.onCall(async (data) => {
+    // fcmトークンを取得
+    const uid = data;
+    const fcmToken = await db.collection(collUsers).doc(uid).get().then((userSnap) => {
+        const isUserExists = userSnap.exists;
+        if (!isUserExists) return;
+        return userSnap.data().fcmToken.token;
+    }).catch((error) => {
+        throw new Error(error);
+    });
+    console.log('fcmToken', fcmToken);
+
+    const title = "testNotification";
+    const body = "this is notification body";
+    const message = {
+        token: fcmToken,
+        notification: {
+            title: title,
+            body: body
+        }
+    }
+
+    await Messaging.send(message);
+});
+
+/*
+app.get("/setFirebaseAdminEnv", async (req, res) => {
+    await axios.get("https://weather-scheduler-test.azurewebsites.net/api/getFirebaseAdminServiceAccount")
         .then((res) => {
             serviceAccount = {
                 type: res.data.FIREBASE_ADMIN_TYPE,
@@ -126,3 +118,4 @@ app.get("/getFirebaseAdminEnv", async (req, res) => {
 });
 
 exports.api = functions.region(region).https.onRequest(app);
+*/

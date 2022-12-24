@@ -599,13 +599,14 @@
 </template>
 
 <script>
+import { firebase } from "~/plugins/firebase.js";
 import { addEvent } from "~/plugins/firebase-firestore.js";
 import { areas } from "~/plugins/areas.js";
-import { getFcmToken } from "~/plugins/firebase-firestore.js";
+import { getApp } from "firebase/app";
+import { getFunctions, httpsCallable } from "firebase/functions";
 import Contact from "~/components/Contact.vue";
 import Gmap from "~/components/Gmap.vue";
 import GmapAc from "~/components/GmapAc.vue";
-import { JWT } from "google-auth-library";
 
 export default {
   components: { Contact, Gmap, GmapAc },
@@ -703,72 +704,15 @@ export default {
 
     const date = new Date();
     const dateToday = this.formatDate(date);
-    /*
-    const dateToday = await this.$axios.$get("/formatDate", {
-      params: {
-        date: date,
-      },
-    });
-    */
     this.dateToday = dateToday;
 
-    const getAccessToken = async () => {
-      const messagingScope = "https://www.googleapis.com/auth/firebase.messaging";
-      const scopes = [messagingScope];
-      const key = await this.$axios.$get(
-        "https://weather-scheduler-test.azurewebsites.net/api/getFirebaseAdminServiceAccount"
-      );
-      console.log("serviceAccount", key.client_email);
-      const jwtClient = new JWT(
-        key.client_email,
-        null,
-        key.private_key,
-        scopes,
-        null
-      );
-      console.log("jwt", jwtClient);
-      jwtClient.authorize((error, tokens) => {
-        console.log("authorize tokens", tokens);
-        console.log("authorize", tokens.access_token);
-        if (error) throw new Error(error);
-        return tokens.access_token;
-      });
-    };
-
-    const title = "testTitle";
-    const body = "hello fcm";
-    await this.$axios
-      .$get(
-        "https://weather-scheduler-test.azurewebsites.net/api/getFirebaseEnv"
-      )
-      .then(async (res) => {
-        const projectId = res.PROJECT_ID;
-        const uid = this.$cookies.get("uid");
-        const fcmToken = await getFcmToken(uid);
-        const fcmSendUrl =
-          "https://fcm.googleapis.com/v1/projects/" +
-          projectId +
-          "/messages:send";
-        const message = {
-          message: {
-            token: fcmToken,
-            notification: {
-              title: title,
-              body: body,
-            },
-          },
-        };
-        await getAccessToken().then(async (accessToken) => {
-          console.log("accessToken", accessToken);
-          await this.$axios.$post(fcmSendUrl, message, {
-            headers: {
-              Authorization: "Bearer " + accessToken,
-            },
-          }).catch((error) => {
-            console.log("accessToken Error", accessToken);
-          });
-        });
-      });
+    const uid = this.$cookies.get("uid");
+    await firebase().then(async () => {
+      const region = "asia-northeast1";
+      const functions = getFunctions(getApp(), region);
+      const sendMessage = httpsCallable(functions, "sendMessage");
+      sendMessage(uid);
+    });
   },
   created() {
     this.areas = areas;
