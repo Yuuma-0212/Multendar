@@ -591,6 +591,7 @@
         <v-scroll-x-transition :hide-on-leave="true">
           <li class="tabs__item" v-show="isActiveNum === '3'">
             <Contact />
+            <v-btn @click="hello('hello world')">test</v-btn>
           </li>
         </v-scroll-x-transition>
       </ul>
@@ -602,6 +603,7 @@
 import { firebase } from "~/plugins/firebase.js";
 import { addEvent } from "~/plugins/firebase-firestore.js";
 import { areas } from "~/plugins/areas.js";
+import { reqNotificationPermission } from "~/plugins/firebase-fcm.js";
 import { getApp } from "firebase/app";
 import { getFunctions, httpsCallable } from "firebase/functions";
 import Contact from "~/components/Contact.vue";
@@ -682,13 +684,15 @@ export default {
       this.cWindowW = window.innerWidth;
     });
 
+    reqNotificationPermission();
+
     // 天気予報を取得
     const selectedArea = JSON.parse(
       JSON.stringify(this.$store.getters.getSelectedArea)
     );
     if (Object.keys(selectedArea).length) {
       const forecast = await this.$axios.$get(
-        "https://weather-scheduler-test.azurewebsites.net/api/getForecast",
+        "/getForecast",
         {
           params: {
             lat: selectedArea.lat,
@@ -706,9 +710,10 @@ export default {
     const dateToday = this.formatDate(date);
     this.dateToday = dateToday;
 
+    // テスト通知
     /*
-    const uid = this.$cookies.get("uid");
     await firebase().then(async () => {
+      const uid = this.$cookies.get("uid");
       const region = "asia-northeast1";
       const functions = getFunctions(getApp(), region);
       const sendMessage = httpsCallable(functions, "sendMessage");
@@ -720,6 +725,17 @@ export default {
     this.areas = areas;
   },
   methods: {
+    hello(text) {
+      const uid = this.$cookies.get("uid");
+      const ctrl = navigator.serviceWorker.controller;
+      const message = {
+        type: "data",
+        payload: {
+          uid: uid,
+        },
+      };
+      ctrl.postMessage(message);
+    },
     viewDay(date) {
       this.focus = date;
       this.type = "day";
@@ -903,7 +919,7 @@ export default {
       this.isLoadingSelectedArea = true;
       await this.$axios
         .$get(
-          "https://weather-scheduler-test.azurewebsites.net/api/getForecast",
+          "/getForecast",
           {
             params: {
               lat: event.lat,

@@ -16,16 +16,16 @@ export default {
   asyncData() {
     // fcmのswを登録する
     // サーバーサイドで処理をしないといけない
-    if ("serviceWorker" in navigator) {
+    /*if ("serviceWorker" in navigator) {
       navigator.serviceWorker
-        .register("../static/firebase-messaging-sw.js")
+        .register("../static/sw.js")
         .then(function (registration) {
           console.log("Registration successful, scope is:", registration.scope);
         })
         .catch(function (error) {
           console.log("Service worker registration failed, error:", error);
         });
-    }
+    }*/
   },
 };
 </script>

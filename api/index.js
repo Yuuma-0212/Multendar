@@ -18,7 +18,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.get("/hello", (req, res) => {
-    res.send("hello express");
+    console.log("hello" + req.query.hello);
 })
 
 // YYYY-MM-DDにフォーマット

@@ -94,3 +94,7 @@ sw.*
 
 # firebase-admin
 weather-schedule-66b14-firebase-adminsdk-03da8-cd09df0bd8.json
+
+# Service worker firebase apis
+sw-env.js
+notification-sw.js

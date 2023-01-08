@@ -1,7 +1,6 @@
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 const { getFirestore, Firestore } = require("firebase-admin/firestore");
-const messaging = require("firebase-admin/messaging");
 const express = require("express");
 const axios = require("axios");
 //const app = express();
@@ -60,7 +59,7 @@ exports.setFirebaseAdminServiceAccount = functions.region(region).https.onCall(a
 
 exports.sendMessage = functions.region(region).https.onCall(async (data) => {
     // fcmトークンを取得
-    const uid = data;
+    const uid = data.uid;
     const fcmToken = await db.collection(collUsers).doc(uid).get().then((userSnap) => {
         const isUserExists = userSnap.exists;
         if (!isUserExists) return;
@@ -70,13 +69,19 @@ exports.sendMessage = functions.region(region).https.onCall(async (data) => {
     });
     console.log('fcmToken', fcmToken);
 
-    const title = "testNotification";
-    const body = "this is notification body";
+    const title = "Weather Scheduler";
+    const body = `${data.notificationTime}分後にスケジュール${data.title}があります`;
+    const webPushLink = "http://localhost:3000/calendar"
     const message = {
         token: fcmToken,
         notification: {
             title: title,
             body: body
+        },
+        webpush: {
+            fcmOptions: {
+                link: webPushLink
+            }
         }
     }
 

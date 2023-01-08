@@ -3,7 +3,6 @@ import Cookie from "cookie";
 import { getApp } from "firebase/app";
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import { firebase } from "~/plugins/firebase";
-//import { getEvents } from "~/plugins/firebase-firestore";
 
 export const state = () => ({
     idToken: null,
@@ -59,8 +58,8 @@ export const actions = {
                 const getEvents = httpsCallable(functions, "getEvents");
 
                 await getEvents(auth.uid).then((res) => {
-                    if (res.data == null) return; 
-                    const events = res.data.map(value => JSON.parse(value));
+                    if (res.data == null) return;
+                    const events = res.data;
                     if (events != undefined) dispatch("setEvents", events);
                 }).catch((error) => {
                     console.log("getEvents Error", error);

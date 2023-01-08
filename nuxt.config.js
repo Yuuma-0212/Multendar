@@ -37,6 +37,10 @@ export default {
     '~/plugins/gmap-vue.js',
     '~/plugins/fontawesome.js',
     {
+      src: '~/plugins/service-worker-register.js',
+      mode: 'client'
+    },
+    {
       src: '~/plugins/firebase-fcm.js',
       mode: 'client'
     },
@@ -54,6 +58,7 @@ export default {
     // https://go.nuxtjs.dev/vuetify
     '@nuxtjs/vuetify',
     '@nuxtjs/dotenv',
+    '@nuxtjs/pwa'
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -65,6 +70,7 @@ export default {
     'vue-swatches/nuxt',
     'cookie-universal-nuxt',
     '@nuxtjs/dotenv',
+    '@nuxtjs/pwa'
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -107,9 +113,55 @@ export default {
 
   privateRuntimeConfig: {
     axios: {
-      baseURL: "https://" + process.env.WEBSITE_HOSTNAME + "/api",
+      baseURL: process.env.BASE_URL,
     }
   },
 
   serverMiddleware: ['~/api'],
+
+  // pwa
+  manifest: {
+    name: "Weather Scheduler",
+    lang: "ja",
+    short_name: "Weather Scheduler",
+    title: "Weather Scheduler",
+    "og:title": "Weather Scheduler",
+    description: "サイトの説明",
+    "og:description": "サイトの説明",
+    theme_color: "#163956",
+    background_color: "#163956",
+  },
+
+  pwa: {
+    workbox: {
+      dev: true,
+      clientsClaim: true,
+      skipWaiting: true,
+      importScripts: [
+        "firebase-messaging-sw.js"
+      ],
+      /*
+      runtimeCaching: [
+        {
+          urlPattern: "http://localhost:8080/.*",
+          handler: "staleWhileRevalidate",
+          strategyOptions: {
+            cacheName: "host8080"
+          },
+          strategyPlugins: [
+            {
+              use: "Expiration",
+              config: {
+                maxAgeSeconds: 60,
+                cachebleResponse: {
+                  statuses: [200]
+                }
+              }
+            }
+          ]
+        }
+      ]
+      */
+    }
+  }
 }

@@ -1,9 +1,9 @@
 import cookie from "js-cookie";
-import { getFirestore, doc, setDoc, getDoc, updateDoc, arrayUnion, serverTimestamp } from "firebase/firestore";
+import { getFirestore, doc, setDoc, getDoc, updateDoc, arrayUnion, serverTimestamp, connectFirestoreEmulator } from "firebase/firestore";
 import { firebase } from "~/plugins/firebase";
 
 let db = null;
-const queryDocUsers = "users";
+const collUsers = "users";
 
 export default () => {
     firebase().then(() => {
@@ -12,31 +12,24 @@ export default () => {
 }
 
 export const checkUserExists = (async (uid) => {
-    const docRef = doc(db, queryDocUsers, uid);
+    const docRef = doc(db, collUsers, uid);
     const userExists = await getDoc(docRef).then((userSnap) => {
         return userSnap.exists();
     });
 
     return userExists;
-
-    /*
-    const userSnap = await getDoc(docRef);
-
-    if (userSnap.exists()) {
-        return true;
-    }
-    return false;
-    */
 });
 
 export const addUser = ((user, idToken) => {
+    const userRef = doc(db, collUsers, user.uid); 
     const userData = {
+        uid: user.uid,
         name: user.displayName,
         email: user.email,
         idToken: idToken,
         timestamp: serverTimestamp(),
     }
-    setDoc(doc(db, queryDocUsers, user.uid), userData).then(() => {
+    setDoc(userRef, userData).then(() => {
         return;
     }).catch((error) => {
         throw new Error(error);
@@ -45,12 +38,13 @@ export const addUser = ((user, idToken) => {
 
 export const addEvent = (async (event) => {
     const uid = cookie.get("uid");
-    const userRef = doc(db, queryDocUsers, uid);
-
-    await updateDoc(userRef, {
-        events: arrayUnion(JSON.stringify(event)),
+    const userRef = doc(db, collUsers, uid);
+    const eventData = {
+        events: arrayUnion(event),
         timestamp: serverTimestamp()
-    }).then(() => {
+    }
+
+    await updateDoc(userRef, eventData).then(() => {
         return;
     }).catch((error) => {
         throw new Error(error);
@@ -58,8 +52,9 @@ export const addEvent = (async (event) => {
 });
 
 export const getEvents = (async (uid) => {
-    const userRef = doc(db, queryDocUsers, uid);
+    const userRef = doc(db, collUsers, uid);
     const userSnap = await getDoc(userRef);
+
     if (userSnap.exists()) {
         return userSnap.data().events;
     }
@@ -67,7 +62,7 @@ export const getEvents = (async (uid) => {
 
 export const setFcmToken = (async (fcmToken) => {
     const uid = cookie.get("uid");
-    const userRef = doc(db, queryDocUsers, uid);
+    const userRef = doc(db, collUsers, uid);
 
     await updateDoc(userRef, {
         fcmToken: {
@@ -82,8 +77,9 @@ export const setFcmToken = (async (fcmToken) => {
 })
 
 export const getFcmToken = (async (uid) => {
-    const userRef = doc(db, queryDocUsers, uid);
+    const userRef = doc(db, collUsers, uid);
     const userSnap = await getDoc(userRef);
+    
     if (userSnap.exists()) {
         return userSnap.data().fcmToken.token;
     }
