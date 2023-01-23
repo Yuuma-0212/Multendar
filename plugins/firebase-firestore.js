@@ -1,4 +1,4 @@
-import cookie from "js-cookie";
+import cookies from "js-cookie";
 import { getFirestore, doc, setDoc, getDoc, updateDoc, arrayUnion, serverTimestamp, connectFirestoreEmulator } from "firebase/firestore";
 import { firebase } from "~/plugins/firebase";
 
@@ -23,7 +23,6 @@ export const checkUserExists = (async (uid) => {
 export const addUser = ((user, idToken) => {
     const userRef = doc(db, collUsers, user.uid); 
     const userData = {
-        uid: user.uid,
         name: user.displayName,
         email: user.email,
         idToken: idToken,
@@ -37,7 +36,7 @@ export const addUser = ((user, idToken) => {
 });
 
 export const addEvent = (async (event) => {
-    const uid = cookie.get("uid");
+    const uid = cookies.get("uid");
     const userRef = doc(db, collUsers, uid);
     const eventData = {
         events: arrayUnion(event),
@@ -61,8 +60,9 @@ export const getEvents = (async (uid) => {
 });
 
 export const setFcmToken = (async (fcmToken) => {
-    const uid = cookie.get("uid");
+    const uid = cookies.get("uid");
     const userRef = doc(db, collUsers, uid);
+    console.log("setFcmToken", fcmToken);
 
     await updateDoc(userRef, {
         fcmToken: {
@@ -77,8 +77,10 @@ export const setFcmToken = (async (fcmToken) => {
 })
 
 export const getFcmToken = (async (uid) => {
+    console.log("uid", uid);
     const userRef = doc(db, collUsers, uid);
     const userSnap = await getDoc(userRef);
+    console.log('getFcmToken', userSnap.data().fcmToken.token);
     
     if (userSnap.exists()) {
         return userSnap.data().fcmToken.token;

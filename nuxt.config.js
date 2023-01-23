@@ -1,5 +1,4 @@
 import { config } from "dotenv";
-import axios from "axios";
 config();
 
 export default {
@@ -139,7 +138,7 @@ export default {
       skipWaiting: true,
       importScripts: [
         "firebase-messaging-sw.js"
-      ],
+      ]
       /*
       runtimeCaching: [
         {

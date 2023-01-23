@@ -601,7 +601,7 @@
 
 <script>
 import { firebase } from "~/plugins/firebase.js";
-import { addEvent } from "~/plugins/firebase-firestore.js";
+import { addEvent, getFcmToken } from "~/plugins/firebase-firestore.js";
 import { areas } from "~/plugins/areas.js";
 import { reqNotificationPermission } from "~/plugins/firebase-fcm.js";
 import { getApp } from "firebase/app";
@@ -648,6 +648,7 @@ export default {
     notificationTime: "0",
     isNotification: true,
     eventColor: "#FF5252",
+    fcmToken: "",
     swatches: [
       "#FF5252",
       "#FF4081",
@@ -684,22 +685,23 @@ export default {
       this.cWindowW = window.innerWidth;
     });
 
-    reqNotificationPermission();
+    await reqNotificationPermission().then((fcmToken) => {
+      console.log("fcmToken", fcmToken);
+      this.fcmToken = fcmToken;
+      this.setNotification(this.fcmToken);
+    });
 
     // 天気予報を取得
     const selectedArea = JSON.parse(
       JSON.stringify(this.$store.getters.getSelectedArea)
     );
     if (Object.keys(selectedArea).length) {
-      const forecast = await this.$axios.$get(
-        "/getForecast",
-        {
-          params: {
-            lat: selectedArea.lat,
-            lon: selectedArea.lon,
-          },
-        }
-      );
+      const forecast = await this.$axios.$get("/getForecast", {
+        params: {
+          lat: selectedArea.lat,
+          lon: selectedArea.lon,
+        },
+      });
 
       this.selectedArea = selectedArea;
       this.forecastWeek = forecast.week;
@@ -873,6 +875,7 @@ export default {
 
       addEvent(newEvent)
         .then(() => {
+          this.setNotification(this.fcmToken);
           this.$toast.success("登録が完了しました", {
             position: "top-right",
           });
@@ -918,15 +921,12 @@ export default {
     async changeForecastArea(event) {
       this.isLoadingSelectedArea = true;
       await this.$axios
-        .$get(
-          "/getForecast",
-          {
-            params: {
-              lat: event.lat,
-              lon: event.lon,
-            },
-          }
-        )
+        .$get("/getForecast", {
+          params: {
+            lat: event.lat,
+            lon: event.lon,
+          },
+        })
         .then((forecast) => {
           this.forecastWeek = forecast.week;
           this.forecastHour = forecast.hour;
@@ -941,6 +941,23 @@ export default {
       const day = ("0" + date.getDate()).slice(-2);
       const fDate = `${date.getFullYear()}-${month}-${day}`;
       return fDate;
+    },
+    setNotification(fcmToken) {
+      // イベントの通知設定
+      const events = JSON.parse(JSON.stringify(this.events));
+      if (events.length > 0) {
+        const uid = this.$cookies.get("uid");
+        const ctrl = navigator.serviceWorker.controller;
+        const notificationData = {
+          type: "data",
+          payload: {
+            uid: uid,
+            events: events,
+            fcmToken: fcmToken,
+          },
+        };
+        ctrl.postMessage(notificationData);
+      }
     },
   },
 };

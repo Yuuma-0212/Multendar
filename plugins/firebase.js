@@ -2,7 +2,6 @@ import { initializeApp, getApp, getApps } from "firebase/app";
 import { getFunctions, connectFunctionsEmulator, httpsCallable } from 'firebase/functions';
 import { getAuth, connectAuthEmulator } from "firebase/auth";
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
-import axios from "axios";
 
 /*
 export const firebase = async () => {
@@ -36,9 +35,8 @@ export const firebase = async () => {
 
   if (getApps().length) return;
 
-  return initializeApp(firebaseConfig);
+  initializeApp(firebaseConfig);
 
-  /*
   const auth = getAuth();
   const functions = getFunctions(getApp(), "asia-northeast1");
   const firestore = getFirestore();
@@ -46,5 +44,4 @@ export const firebase = async () => {
   connectAuthEmulator(auth, "http://localhost:9099");
   connectFunctionsEmulator(functions, 'localhost', 5001);
   connectFirestoreEmulator(firestore, 'localhost', 8080);
-  */
 }

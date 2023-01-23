@@ -8,31 +8,39 @@ const axios = require("axios");
 //let serviceAccount = {};
 
 if (!admin.apps.length) {
-    const serviceAccount = require("./weather-schedule-66b14-firebase-adminsdk-03da8-cd09df0bd8.json");
+  const serviceAccount = require("./weather-schedule-66b14-firebase-adminsdk-03da8-cd09df0bd8.json");
 
-    admin.initializeApp({
-        projectId: "weather-schedule-66b14",
-        credential: admin.credential.cert(serviceAccount),
-        databaseURL: "https://weather-schedule-66b14-default-rtdb.firebaseio.com"
-    });
+  admin.initializeApp({
+    projectId: "weather-schedule-66b14",
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: "https://weather-schedule-66b14-default-rtdb.firebaseio.com",
+  });
 }
 
 const region = "asia-northeast1";
 const db = getFirestore();
 const collUsers = "users";
 
-exports.getEvents = functions.region(region).https.onCall(async (data, context) => {
-    const uid = data;
-    const events = await db.collection(collUsers).doc(uid).get().then((userSnap) => {
+exports.getEvents = functions
+  .region(region)
+  .https.onCall(async (data, context) => {
+    const notificationData = await db
+      .collection(collUsers)
+      .doc(data.uid)
+      .get()
+      .then((userSnap) => {
         const isUserExists = userSnap.exists;
         if (!isUserExists) return;
-        return userSnap.data().events;
-    }).catch((error) => {
+        return {
+          events: userSnap.data().events
+        };
+      })
+      .catch((error) => {
         throw new Error(error);
-    });
+      });
 
-    return events;
-});
+    return notificationData;
+  });
 
 /*
 exports.setFirebaseAdminServiceAccount = functions.region(region).https.onCall(async () => {
@@ -58,34 +66,24 @@ exports.setFirebaseAdminServiceAccount = functions.region(region).https.onCall(a
 */
 
 exports.sendMessage = functions.region(region).https.onCall(async (data) => {
-    // fcmトークンを取得
-    const uid = data.uid;
-    const fcmToken = await db.collection(collUsers).doc(uid).get().then((userSnap) => {
-        const isUserExists = userSnap.exists;
-        if (!isUserExists) return;
-        return userSnap.data().fcmToken.token;
-    }).catch((error) => {
-        throw new Error(error);
-    });
-    console.log('fcmToken', fcmToken);
+  const fcmToken = data.fcmToken;
+  const title = "Weather Scheduler";
+  const body = `${data.notificationTime}分後にスケジュール${data.title}があります`;
+  const webPushLink = "http://localhost:3000/calendar";
+  const message = {
+    token: fcmToken,
+    notification: {
+      title: title,
+      body: body,
+    },
+    webpush: {
+      fcmOptions: {
+        link: webPushLink,
+      },
+    },
+  };
 
-    const title = "Weather Scheduler";
-    const body = `${data.notificationTime}分後にスケジュール${data.title}があります`;
-    const webPushLink = "http://localhost:3000/calendar"
-    const message = {
-        token: fcmToken,
-        notification: {
-            title: title,
-            body: body
-        },
-        webpush: {
-            fcmOptions: {
-                link: webPushLink
-            }
-        }
-    }
-
-    await admin.messaging().send(message);
+  await admin.messaging().send(message);
 });
 
 /*

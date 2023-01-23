@@ -26,13 +26,17 @@ export default {
     isLogin: false
   }),
   created() {
-    this.isLogin = this.$store.getters.getIsLogin;
+    const isLogin = this.$cookies.get("isLogin");
+    if (isLogin) {
+      this.isLogin = true;
+    }
   }, 
   methods: {
     login() {
       login()
         .then((user) => {
           this.isLogin = true;
+          this.$cookies.set("isLogin", this.isLogin);
           this.$cookies.set("uid", user.uid);
           this.$cookies.set("idToken", user.idToken);
           this.$router.push({ path: "/calendar" });
