@@ -118,20 +118,32 @@ export default {
 
   serverMiddleware: ['~/api'],
 
-  // pwa
-  manifest: {
-    name: "Weather Scheduler",
-    lang: "ja",
-    short_name: "Weather Scheduler",
-    title: "Weather Scheduler",
-    "og:title": "Weather Scheduler",
-    description: "サイトの説明",
-    "og:description": "サイトの説明",
-    theme_color: "#163956",
-    background_color: "#163956",
-  },
-
   pwa: {
+    icon: {
+      fileName: "icon_pwa.png"
+    },
+    meta: {
+      mobileApp: true,
+      mobileAppIOS: true,
+      appleStatusBarStyle: black
+    },
+    manifest: {
+      name: "Weather Scheduler",
+      lang: "ja",
+      short_name: "Weather Scheduler",
+      title: "Weather Scheduler",
+      "og:title": "Weather Scheduler",
+      description: "サイトの説明",
+      "og:description": "サイトの説明",
+      theme_color: "#163956",
+      background_color: "#163956",
+      icons: [
+        {
+          sizes: "512x512",
+          type: "image/png"
+        }
+      ]
+    },
     workbox: {
       dev: true,
       clientsClaim: true,
