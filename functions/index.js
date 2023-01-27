@@ -1,0 +1,112 @@
+const functions = require("firebase-functions");
+const admin = require("firebase-admin");
+const { getFirestore, Firestore } = require("firebase-admin/firestore");
+const express = require("express");
+const axios = require("axios");
+//const app = express();
+
+//let serviceAccount = {};
+
+if (!admin.apps.length) {
+  const serviceAccount = require("./weather-schedule-66b14-firebase-adminsdk-03da8-cd09df0bd8.json");
+
+  admin.initializeApp({
+    projectId: "weather-schedule-66b14",
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: "https://weather-schedule-66b14-default-rtdb.firebaseio.com",
+  });
+}
+
+const region = "asia-northeast1";
+const db = getFirestore();
+const collUsers = "users";
+
+exports.getEvents = functions
+  .region(region)
+  .https.onCall(async (data, context) => {
+    const notificationData = await db
+      .collection(collUsers)
+      .doc(data.uid)
+      .get()
+      .then((userSnap) => {
+        const isUserExists = userSnap.exists;
+        if (!isUserExists) return;
+        return {
+          events: userSnap.data().events
+        };
+      })
+      .catch((error) => {
+        throw new Error(error);
+      });
+
+    return notificationData;
+  });
+
+/*
+exports.setFirebaseAdminServiceAccount = functions.region(region).https.onCall(async () => {
+    await axios.get("https://weather-scheduler-test.azurewebsites.net/api/getFirebaseAdminServiceAccount")
+        .then((res) => {
+            serviceAccount = {
+                type: res.data.FIREBASE_ADMIN_TYPE,
+                project_id: res.data.FIREBASE_ADMIN_PROJECT_ID,
+                private_key_id: res.data.FIREBASE_ADMIN_PRIVATE_KEY_ID,
+                private_key: res.data.FIREBASE_ADMIN_PRIVATE_KEY,
+                client_email: res.data.FIREBASE_ADMIN_CLIENT_EMAIL,
+                client_id: res.data.FIREBASE_ADMIN_CLIENT_ID,
+                auth_uri: res.data.FIREBASE_ADMIN_AUTH_URI,
+                token_uri: res.data.FIREBASE_ADMIN_TOKEN_URI,
+                auth_provider_x509_cert_url: res.data.FIREBASE_ADMIN_AUTH_PROVIDER_X509_CERT_URL,
+                client_x509_cert_url: res.data.FIREBASE_ADMIN_CLIENT_X509_CERT_URL
+            };
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+});
+*/
+
+exports.sendMessage = functions.region(region).https.onCall(async (data) => {
+  const fcmToken = data.fcmToken;
+  const title = "Weather Scheduler";
+  const body = `${data.notificationTime}分後にスケジュール${data.title}があります`;
+  const webPushLink = "http://localhost:3000/calendar";
+  const message = {
+    token: fcmToken,
+    notification: {
+      title: title,
+      body: body,
+    },
+    webpush: {
+      fcmOptions: {
+        link: webPushLink,
+      },
+    },
+  };
+
+  await admin.messaging().send(message);
+});
+
+/*
+app.get("/setFirebaseAdminEnv", async (req, res) => {
+    await axios.get("https://weather-scheduler-test.azurewebsites.net/api/getFirebaseAdminServiceAccount")
+        .then((res) => {
+            serviceAccount = {
+                type: res.data.FIREBASE_ADMIN_TYPE,
+                project_id: res.data.FIREBASE_ADMIN_PROJECT_ID,
+                private_key_id: res.data.FIREBASE_ADMIN_PRIVATE_KEY_ID,
+                private_key: res.data.FIREBASE_ADMIN_PRIVATE_KEY,
+                client_email: res.data.FIREBASE_ADMIN_CLIENT_EMAIL,
+                client_id: res.data.FIREBASE_ADMIN_CLIENT_ID,
+                auth_uri: res.data.FIREBASE_ADMIN_AUTH_URI,
+                token_uri: res.data.FIREBASE_ADMIN_TOKEN_URI,
+                auth_provider_x509_cert_url: res.data.FIREBASE_ADMIN_AUTH_PROVIDER_X509_CERT_URL,
+                client_x509_cert_url: res.data.FIREBASE_ADMIN_CLIENT_X509_CERT_URL
+            };
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+});
+
+exports.api = functions.region(region).https.onRequest(app);
+*/
