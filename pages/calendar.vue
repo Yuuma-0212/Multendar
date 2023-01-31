@@ -3,29 +3,17 @@
     <nav class="nav">
       <ul class="nav__list">
         <li class="nav__list-item">
-          <button
-            class="nav__btn"
-            :class="{ active: isActiveNum === '1' }"
-            @click="changeActiveTab('1')"
-          >
+          <button class="nav__btn" :class="{ active: isActiveNum === '1' }" @click="changeActiveTab('1')">
             Calendar
           </button>
         </li>
         <li class="nav__list-item">
-          <button
-            class="nav__btn"
-            :class="{ active: isActiveNum === '2' }"
-            @click="changeActiveTab('2')"
-          >
+          <button class="nav__btn" :class="{ active: isActiveNum === '2' }" @click="changeActiveTab('2')">
             Add Event
           </button>
         </li>
         <li class="nav__list-item">
-          <button
-            class="nav__btn"
-            :class="{ active: isActiveNum === '3' }"
-            @click="changeActiveTab('3')"
-          >
+          <button class="nav__btn" :class="{ active: isActiveNum === '3' }" @click="changeActiveTab('3')">
             Contact
           </button>
         </li>
@@ -34,19 +22,13 @@
     <div class="u-container">
       <ul class="tabs">
         <v-scroll-x-transition :hide-on-leave="true">
-          <li
-            class="tabs__item py-10 px-2 px-md-15"
-            v-show="isActiveNum === '1'"
-          >
+          <li class="tabs__item py-10 px-2 px-md-15" v-show="isActiveNum === '1'">
             <v-toolbar flat>
               <v-spacer></v-spacer>
               <v-btn fab text small color="grey darken-2" @click="prev">
                 <v-icon> mdi-chevron-left </v-icon>
               </v-btn>
-              <v-toolbar-title
-                class="mx-3 calendar__title"
-                v-if="$refs.calendar"
-              >
+              <v-toolbar-title class="mx-3 calendar__title" v-if="$refs.calendar">
                 {{ $refs.calendar.title }}
               </v-toolbar-title>
               <v-btn fab text small color="grey darken-2" @click="next">
@@ -55,39 +37,17 @@
               <v-spacer></v-spacer>
             </v-toolbar>
             <v-toolbar flat>
-              <v-select
-                class="calendar__selected-area"
-                v-model="selectedArea"
-                left
-                :items="areas"
-                label="地域"
-                outlined
-                :dense="true"
-                :hide-details="true"
-                return-object
-                item-text="name"
-                :loading="isLoadingSelectedArea"
-                @change="changeForecastArea"
-                item-value="1"
-              ></v-select>
+              <v-select class="calendar__selected-area" v-model="selectedArea" left :items="areas" label="地域" outlined
+                :dense="true" :hide-details="true" return-object item-text="name" :loading="isLoadingSelectedArea"
+                @change="changeForecastArea" item-value="1"></v-select>
               <v-spacer></v-spacer>
-              <v-btn
-                class="mr-sm-3"
-                outlined
-                color="grey darken-2"
-                @click="setToday"
-              >
+              <v-btn class="mr-sm-3" outlined color="grey darken-2" @click="setToday">
                 Today
               </v-btn>
               <v-spacer v-if="cWindowW < xsWindowW"></v-spacer>
               <v-menu bottom right>
                 <template v-slot:activator="{ on, attrs }">
-                  <v-btn
-                    outlined
-                    color="grey darken-2"
-                    v-bind="attrs"
-                    v-on="on"
-                  >
+                  <v-btn outlined color="grey darken-2" v-bind="attrs" v-on="on">
                     <span>{{ typeToLabel[type] }}</span>
                     <v-icon right> mdi-menu-down </v-icon>
                   </v-btn>
@@ -109,32 +69,14 @@
               </v-menu>
             </v-toolbar>
             <div class="calendar__calendar">
-              <v-calendar
-                ref="calendar"
-                v-model="focus"
-                color="primary"
-                locale="ja-JP"
-                :class="{ 'type-week': isTypeWeek }"
-                :show-month-on-first="false"
-                :events="events"
-                :event-color="getEventColor"
-                :type="type"
-                :day-format="dayFormatCalendar"
-                @click:event="showEvent"
-                @click:date="viewDay"
-                @click:more="viewDay"
-                @change="updateRange"
-              >
+              <v-calendar ref="calendar" v-model="focus" color="primary" locale="ja-JP"
+                :class="{ 'type-week': isTypeWeek }" :show-month-on-first="false" :events="events"
+                :event-color="getEventColor" :type="type" :day-format="dayFormatCalendar" @click:event="showEvent"
+                @click:date="viewDay" @click:more="viewDay" @change="updateRange">
                 <template v-slot:day-label="{ date, day }">
                   <v-row class="ma-0" justify="center">
                     <template v-if="date === dateToday">
-                      <v-btn
-                        fab
-                        color="primary"
-                        small
-                        elevation="0"
-                        @click="cViewDay(date)"
-                      >
+                      <v-btn fab color="primary" small elevation="0" @click="cViewDay(date)">
                         <span>{{ day }}</span>
                       </v-btn>
                     </template>
@@ -145,10 +87,7 @@
                     </template>
                     <template v-if="forecastWeek[date]">
                       <div class="calendar__weather-img-outer">
-                        <img
-                          class="calendar__weather-img"
-                          :src="forecastWeek[date].icon"
-                        />
+                        <img class="calendar__weather-img" :src="forecastWeek[date].icon" />
                       </div>
                     </template>
                   </v-row>
@@ -156,13 +95,7 @@
                 <template v-slot:day-label-header="{ date, day }">
                   <v-row class="ma-0" justify="center" aline-content="center">
                     <template v-if="day === dateToday">
-                      <v-btn
-                        fab
-                        color="primary"
-                        small
-                        elevation="0"
-                        @click="cViewDay(date)"
-                      >
+                      <v-btn fab color="primary" small elevation="0" @click="cViewDay(date)">
                         <span>{{ day }}</span>
                       </v-btn>
                     </template>
@@ -173,42 +106,24 @@
                     </template>
                     <template v-if="forecastWeek[date]">
                       <div class="calendar__weather-img-outer">
-                        <img
-                          class="calendar__weather-img"
-                          :src="forecastWeek[date].icon"
-                        />
+                        <img class="calendar__weather-img" :src="forecastWeek[date].icon" />
                       </div>
                     </template>
                   </v-row>
                   <p class="calendar__temp ma-0" v-if="forecastWeek[date]">
-                    <span
-                      ><font-awesome-icon
-                        icon="fa-solid fa-temperature-arrow-up"
-                      />
-                      {{ forecastWeek[date].tempMax }}</span
-                    ><br />
-                    <span
-                      ><font-awesome-icon
-                        icon="fa-solid fa-temperature-arrow-down"
-                      />
-                      {{ forecastWeek[date].tempMin }}</span
-                    >
+                    <span><font-awesome-icon icon="fa-solid fa-temperature-arrow-up" />
+                      {{ forecastWeek[date].tempMax }}</span><br />
+                    <span><font-awesome-icon icon="fa-solid fa-temperature-arrow-down" />
+                      {{ forecastWeek[date].tempMin }}</span>
                   </p>
                 </template>
                 <template v-slot:interval="{ date, hour }">
                   <template v-if="date && forecastHour[date + '-' + hour]">
-                    <img
-                      class="calendar__weather-img-hour"
-                      :src="forecastHour[date + '-' + hour].icon"
-                    />
+                    <img class="calendar__weather-img-hour" :src="forecastHour[date + '-' + hour].icon" />
                   </template>
                 </template>
               </v-calendar>
-              <v-dialog
-                v-model="selectedOpen"
-                :activator="selectedElement"
-                max-width="1000px"
-              >
+              <v-dialog v-model="selectedOpen" :activator="selectedElement" max-width="1000px">
                 <v-card flat min-height="80vh">
                   <v-row no-gutters>
                     <v-col class="col-12 col-md-8" order-md="2">
@@ -219,29 +134,20 @@
                         <v-list>
                           <v-list-item>
                             <v-list-item-action>
-                              <v-icon :style="{ color: selectedEvent.color }"
-                                >mdi-calendar</v-icon
-                              >
+                              <v-icon :style="{ color: selectedEvent.color }">mdi-calendar</v-icon>
                             </v-list-item-action>
                             <v-list-item-content>
-                              <v-list-item-title
-                                class="calendar__event-detail-text"
-                                v-text="selectedEvent.name"
-                              >
+                              <v-list-item-title class="calendar__event-detail-text" v-text="selectedEvent.name">
                               </v-list-item-title>
                             </v-list-item-content>
                           </v-list-item>
                           <v-divider inset></v-divider>
                           <v-list-item>
                             <v-list-item-action>
-                              <v-icon :style="{ color: selectedEvent.color }"
-                                >mdi-clock-time-three-outline</v-icon
-                              >
+                              <v-icon :style="{ color: selectedEvent.color }">mdi-clock-time-three-outline</v-icon>
                             </v-list-item-action>
                             <v-list-item-content>
-                              <v-list-item-title
-                                class="calendar__event-detail-text"
-                              >
+                              <v-list-item-title class="calendar__event-detail-text">
                                 {{ selectedEventSdate }} ~
                                 {{ selectedEventEdate }}
                               </v-list-item-title>
@@ -250,44 +156,32 @@
                           <v-divider inset></v-divider>
                           <v-list-item>
                             <v-list-item-action>
-                              <v-icon :style="{ color: selectedEvent.color }"
-                                >mdi-map-marker</v-icon
-                              >
+                              <v-icon :style="{ color: selectedEvent.color }">mdi-map-marker</v-icon>
                             </v-list-item-action>
                             <v-list-item-content>
-                              <v-list-item-title
-                                class="calendar__event-detail-text"
-                                v-text="selectedEvent.address"
-                              >
+                              <v-list-item-title class="calendar__event-detail-text" v-text="selectedEvent.address">
                               </v-list-item-title>
                             </v-list-item-content>
                           </v-list-item>
                           <v-divider inset></v-divider>
                           <v-list-item>
                             <v-list-item-action>
-                              <v-icon :style="{ color: selectedEvent.color }"
-                                >mdi-note-outline</v-icon
-                              >
+                              <v-icon :style="{ color: selectedEvent.color }">mdi-note-outline</v-icon>
                             </v-list-item-action>
                             <v-list-item-content>
-                              <v-list-item-title
-                                class="calendar__event-detail-text--memo"
-                                v-text="selectedEvent.memo"
-                              ></v-list-item-title>
+                              <v-list-item-title class="calendar__event-detail-text--memo"
+                                v-text="selectedEvent.memo"></v-list-item-title>
                             </v-list-item-content>
                           </v-list-item>
                           <v-divider inset></v-divider>
                           <v-list-item>
                             <v-list-item-action>
-                              <v-icon :style="{ color: selectedEvent.color }"
-                                >mdi-bell-ring-outline</v-icon
-                              >
+                              <v-icon :style="{ color: selectedEvent.color }">mdi-bell-ring-outline</v-icon>
                             </v-list-item-action>
                             <v-list-item-content>
-                              <v-list-item-title
-                                class="calendar__event-detail-text"
-                              >
-                                {{ selectedEvent.notificationTime
+                              <v-list-item-title class="calendar__event-detail-text">
+                                {{
+                                  selectedEvent.notificationTime
                                 }}<span class="ml-1">分前に通知</span>
                               </v-list-item-title>
                             </v-list-item-content>
@@ -297,16 +191,8 @@
                     </v-col>
                   </v-row>
                   <v-card-actions class="mt-md-n10 pb-md-0 pb-8">
-                    <v-row
-                      class="pl-md-7 pb-md-7"
-                      justify="end"
-                      justify-md="start"
-                    >
-                      <v-btn
-                        text
-                        color="secondary"
-                        @click="selectedOpen = false"
-                      >
+                    <v-row class="pl-md-7 pb-md-7" justify="end" justify-md="start">
+                      <v-btn text color="secondary" @click="selectedOpen = false">
                         <v-icon>mdi-chevron-left</v-icon>戻る
                       </v-btn>
                     </v-row>
@@ -317,67 +203,30 @@
           </li>
         </v-scroll-x-transition>
         <v-scroll-x-transition :hide-on-leave="true">
-          <li
-            class="tabs__item py-10 px-10 px-md-16"
-            v-show="isActiveNum === '2'"
-          >
+          <li class="tabs__item py-10 px-10 px-md-16" v-show="isActiveNum === '2'">
             <v-row justify="center">
               <v-form class="form" max-width="500" ref="form">
                 <div>
                   <label class="form__label" for="title">タイトル</label>
-                  <v-text-field
-                    id="title"
-                    class="text-body-2"
-                    clearable
-                    v-model="title"
-                    :rules="[rules.title]"
-                    outlined
-                    :dense="true"
-                  ></v-text-field>
+                  <v-text-field id="title" class="text-body-2" clearable v-model="title" :rules="[rules.title]" outlined
+                    :dense="true"></v-text-field>
                 </div>
                 <div class="calendar__input-wrapper">
                   <template>
-                    <v-dialog
-                      ref="dialogDateS"
-                      v-model="isOpenDialogDateS"
-                      :return-value.sync="dateS"
-                      width="290px"
-                    >
+                    <v-dialog ref="dialogDateS" v-model="isOpenDialogDateS" :return-value.sync="dateS" width="290px">
                       <template v-slot:activator="{ on, attrs }">
                         <div class="form__input">
                           <label class="form__label" for="dateS">予定日</label>
-                          <v-text-field
-                            id="dateS"
-                            class="text-body-2"
-                            v-model="dateS"
-                            v-bind="attrs"
-                            v-on="on"
-                            readonly
-                            outlined
-                            :full-width="true"
-                            :dense="true"
-                          ></v-text-field>
+                          <v-text-field id="dateS" class="text-body-2" v-model="dateS" v-bind="attrs" v-on="on" readonly
+                            outlined :full-width="true" :dense="true"></v-text-field>
                         </div>
                       </template>
-                      <v-date-picker
-                        v-model="dateS"
-                        scrollable
-                        locale="ja-jp"
-                        :day-format="dayFormatDate"
-                      >
+                      <v-date-picker v-model="dateS" scrollable locale="ja-jp" :day-format="dayFormatDate">
                         <v-spacer></v-spacer>
-                        <v-btn
-                          text
-                          color="primary"
-                          @click="isOpenDialogDateS = false"
-                        >
+                        <v-btn text color="primary" @click="isOpenDialogDateS = false">
                           キャンセル
                         </v-btn>
-                        <v-btn
-                          text
-                          color="primary"
-                          @click="$refs.dialogDateS.save(dateS)"
-                        >
+                        <v-btn text color="primary" @click="$refs.dialogDateS.save(dateS)">
                           決定
                         </v-btn>
                       </v-date-picker>
@@ -385,45 +234,20 @@
                   </template>
                   <div class="mx-3"></div>
                   <template>
-                    <v-dialog
-                      ref="dialogDateE"
-                      v-model="isOpenDialogDateE"
-                      :return-value.sync="dateE"
-                      width="290px"
-                    >
+                    <v-dialog ref="dialogDateE" v-model="isOpenDialogDateE" :return-value.sync="dateE" width="290px">
                       <template v-slot:activator="{ on, attrs }">
                         <div class="form__input">
                           <label class="form__label" for="dateE">終了日</label>
-                          <v-text-field
-                            class="text-body-2"
-                            v-model="dateE"
-                            v-bind="attrs"
-                            v-on="on"
-                            readonly
-                            outlined
-                            :dense="true"
-                          ></v-text-field>
+                          <v-text-field class="text-body-2" v-model="dateE" v-bind="attrs" v-on="on" readonly outlined
+                            :dense="true"></v-text-field>
                         </div>
                       </template>
-                      <v-date-picker
-                        v-model="dateE"
-                        scrollable
-                        locale="ja-jp"
-                        :day-format="dayFormatDate"
-                      >
+                      <v-date-picker v-model="dateE" scrollable locale="ja-jp" :day-format="dayFormatDate">
                         <v-spacer></v-spacer>
-                        <v-btn
-                          text
-                          color="primary"
-                          @click="isOpenDialogDateE = false"
-                        >
+                        <v-btn text color="primary" @click="isOpenDialogDateE = false">
                           キャンセル
                         </v-btn>
-                        <v-btn
-                          text
-                          color="primary"
-                          @click="$refs.dialogDateE.save(dateE)"
-                        >
+                        <v-btn text color="primary" @click="$refs.dialogDateE.save(dateE)">
                           決定
                         </v-btn>
                       </v-date-picker>
@@ -432,50 +256,20 @@
                 </div>
                 <div class="calendar__input-wrapper">
                   <template>
-                    <v-dialog
-                      ref="dialogTimeS"
-                      v-model="isOpenDialogTimeS"
-                      :return-value.sync="timeS"
-                      width="290px"
-                    >
+                    <v-dialog ref="dialogTimeS" v-model="isOpenDialogTimeS" :return-value.sync="timeS" width="290px">
                       <template v-slot:activator="{ on, attrs }">
                         <div class="form__input">
-                          <label class="form__label" for="timeS"
-                            >開始時刻</label
-                          >
-                          <v-text-field
-                            id="timeS"
-                            class="text-body-2"
-                            clearable
-                            placeholder="00:00"
-                            v-model="timeS"
-                            v-bind="attrs"
-                            v-on="on"
-                            readonly
-                            outlined
-                            :dense="true"
-                          ></v-text-field>
+                          <label class="form__label" for="timeS">開始時刻</label>
+                          <v-text-field id="timeS" class="text-body-2" clearable placeholder="00:00" v-model="timeS"
+                            v-bind="attrs" v-on="on" readonly outlined :dense="true"></v-text-field>
                         </div>
                       </template>
-                      <v-time-picker
-                        v-if="isOpenDialogTimeS"
-                        v-model="timeS"
-                        format="24hr"
-                        full-width
-                      >
-                        <v-btn
-                          text
-                          color="primary"
-                          @click="isOpenDialogTimeS = false"
-                        >
+                      <v-time-picker v-if="isOpenDialogTimeS" v-model="timeS" format="24hr" full-width>
+                        <v-btn text color="primary" @click="isOpenDialogTimeS = false">
                           キャンセル
                         </v-btn>
                         <v-spacer></v-spacer>
-                        <v-btn
-                          text
-                          color="primary"
-                          @click="$refs.dialogTimeS.save(timeS)"
-                        >
+                        <v-btn text color="primary" @click="$refs.dialogTimeS.save(timeS)">
                           決定
                         </v-btn>
                       </v-time-picker>
@@ -483,50 +277,20 @@
                   </template>
                   <div class="mx-3"></div>
                   <template>
-                    <v-dialog
-                      ref="dialogTimeE"
-                      v-model="isOpenDialogTimeE"
-                      :return-value.sync="timeE"
-                      width="290px"
-                    >
+                    <v-dialog ref="dialogTimeE" v-model="isOpenDialogTimeE" :return-value.sync="timeE" width="290px">
                       <template v-slot:activator="{ on, attrs }">
                         <div class="form__input">
-                          <label class="form__label" for="timeE"
-                            >終了時刻</label
-                          >
-                          <v-text-field
-                            id="timeE"
-                            class="text-body-2"
-                            clearable
-                            placeholder="00:00"
-                            v-model="timeE"
-                            v-bind="attrs"
-                            v-on="on"
-                            readonly
-                            outlined
-                            :dense="true"
-                          ></v-text-field>
+                          <label class="form__label" for="timeE">終了時刻</label>
+                          <v-text-field id="timeE" class="text-body-2" clearable placeholder="00:00" v-model="timeE"
+                            v-bind="attrs" v-on="on" readonly outlined :dense="true"></v-text-field>
                         </div>
                       </template>
-                      <v-time-picker
-                        v-if="isOpenDialogTimeE"
-                        v-model="timeE"
-                        format="24hr"
-                        full-width
-                      >
-                        <v-btn
-                          text
-                          color="primary"
-                          @click="isOpenDialogTimeE = false"
-                        >
+                      <v-time-picker v-if="isOpenDialogTimeE" v-model="timeE" format="24hr" full-width>
+                        <v-btn text color="primary" @click="isOpenDialogTimeE = false">
                           キャンセル
                         </v-btn>
                         <v-spacer></v-spacer>
-                        <v-btn
-                          text
-                          color="primary"
-                          @click="$refs.dialogTimeE.save(timeE)"
-                        >
+                        <v-btn text color="primary" @click="$refs.dialogTimeE.save(timeE)">
                           決定
                         </v-btn>
                       </v-time-picker>
@@ -537,53 +301,26 @@
                 <GmapAc @updateEventData="updateEventData" />
                 <v-row no-gutters>
                   <div>
-                    <label class="form__label" for="iptNotification"
-                      >通知</label
-                    >
+                    <label class="form__label" for="iptNotification">通知</label>
                     <div class="calendar__input-notification">
-                      <v-text-field
-                        id="iptNotification"
-                        class="text-body-2"
-                        v-model="notificationTime"
-                        type="number"
-                        max="60"
-                        min="0"
-                        outlined
-                        :dense="true"
-                        suffix="分前に通知"
-                        @change="matchNum($event)"
-                      ></v-text-field>
+                      <v-text-field id="iptNotification" class="text-body-2" v-model="notificationTime" type="number"
+                        max="60" min="0" outlined :dense="true" suffix="分前に通知"
+                        @change="matchNum($event)"></v-text-field>
                     </div>
                   </div>
                   <v-col class="ml-4" align-self="center">
-                    <v-checkbox
-                      v-model="isNotification"
-                      :false-value="true"
-                      :true-value="false"
-                      label="通知を無効にする"
-                    ></v-checkbox>
+                    <v-checkbox v-model="isNotification" :false-value="true" :true-value="false"
+                      label="通知を無効にする"></v-checkbox>
                   </v-col>
                 </v-row>
                 <label class="form__label" for="memo">メモ</label>
-                <v-textarea
-                  id="memo"
-                  class="text-body-2"
-                  v-model="memo"
-                  outlined
-                  clearable
-                  no-resize
-                  :dense="true"
-                ></v-textarea>
+                <v-textarea id="memo" class="text-body-2" v-model="memo" outlined clearable no-resize
+                  :dense="true"></v-textarea>
                 <div class="calendar__event-color mb-7">
                   <span class="text-body-2 mr-3">イベントカラー:</span>
-                  <v-swatches
-                    v-model="eventColor"
-                    :swatches="swatches"
-                  ></v-swatches>
+                  <v-swatches v-model="eventColor" :swatches="swatches"></v-swatches>
                 </div>
-                <v-btn color="primary" width="100%" @click="addSchedule"
-                  >予定を追加</v-btn
-                >
+                <v-btn color="primary" width="100%" @click="addSchedule">予定を追加</v-btn>
               </v-form>
             </v-row>
           </li>
@@ -600,12 +337,9 @@
 </template>
 
 <script>
-import { firebase } from "~/plugins/firebase.js";
-import { addEvent, getFcmToken } from "~/plugins/firebase-firestore.js";
+import { addEvent, getEvents } from "~/plugins/firebase-firestore.js";
 import { areas } from "~/plugins/areas.js";
 import { reqNotificationPermission } from "~/plugins/firebase-fcm.js";
-import { getApp } from "firebase/app";
-import { getFunctions, httpsCallable } from "firebase/functions";
 import Contact from "~/components/Contact.vue";
 import Gmap from "~/components/Gmap.vue";
 import GmapAc from "~/components/GmapAc.vue";
@@ -712,18 +446,15 @@ export default {
     const dateToday = this.formatDate(date);
     this.dateToday = dateToday;
 
-    // テスト通知
-    /*
-    await firebase().then(async () => {
-      const uid = this.$cookies.get("uid");
-      const region = "asia-northeast1";
-      const functions = getFunctions(getApp(), region);
-      const sendMessage = httpsCallable(functions, "sendMessage");
-      await sendMessage(uid);
-    });
-    */
+    // イベントの表示処理
+    const uid = this.$cookies.get("uid");
+    const events = await getEvents(uid);
+    if (events !== undefined) {
+      this.events = events;
+      this.$store.dispatch("setEvents", events);
+    }
   },
-  created() {
+  async created() {
     this.areas = areas;
   },
   methods: {
@@ -807,19 +538,7 @@ export default {
         this.isTypeWeek = false;
       }
 
-      this.events = this.$store.getters.getEvents.map((value) => {
-        return {
-          name: value.name,
-          start: value.start,
-          end: value.end,
-          address: value.address,
-          markers: value.markers,
-          notificationTime: value.notificationTime,
-          color: value.color,
-          memo: value.memo,
-          timed: value.timed,
-        };
-      });
+      this.events = JSON.parse(JSON.stringify(this.$store.getters.getEvents));
     },
     viewDay({ date }) {
       this.focus = date;
@@ -981,6 +700,7 @@ export default {
       }
     }
   }
+
   &:nth-child(2) {
     .nav__btn {
       &::before {
@@ -988,6 +708,7 @@ export default {
       }
     }
   }
+
   &:nth-child(3) {
     .nav__btn {
       &::before {

@@ -2,8 +2,13 @@ import { initializeApp, getApp, getApps } from "firebase/app";
 import { getFunctions, connectFunctionsEmulator, httpsCallable } from 'firebase/functions';
 import { getAuth, connectAuthEmulator } from "firebase/auth";
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
+import { getMessaging } from "firebase/messaging";
 
-export const firebase = async () => {
+export let auth = null;
+export let functions = null;
+export let db = null;
+
+export default ({ req }) => {
   const firebaseConfig = {
     apiKey: process.env.FIREBASE_API_KEY,
     authDomain: process.env.FIREBASE_AUTH_DOMAIN,
@@ -18,13 +23,20 @@ export const firebase = async () => {
 
   initializeApp(firebaseConfig);
 
-  /*
-  const auth = getAuth();
-  const functions = getFunctions(getApp(), "asia-northeast1");
-  const firestore = getFirestore();
+  auth = getAuth();
+  functions = getFunctions(getApp(), "asia-northeast1");
+  db = getFirestore();
 
-  connectAuthEmulator(auth, "http://localhost:9099");
-  connectFunctionsEmulator(functions, 'localhost', 5001);
-  connectFirestoreEmulator(firestore, 'localhost', 8080);
-  */
+  // テスト環境用
+  if ((process.client && window.location.hostname === "localhost")) {
+    console.log("Firebase Emulatorを起動中");
+
+    connectAuthEmulator(auth, "http://192.168.3.19:9099");
+    connectFunctionsEmulator(functions, '192.168.3.19', 5001);
+    connectFirestoreEmulator(db, '192.168.3.19', 8080);
+  }
+}
+
+export const initMessaging = () => {
+  return getMessaging();
 }

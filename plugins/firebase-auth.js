@@ -10,15 +10,7 @@ import {
     browserLocalPersistence
 } from "firebase/auth";
 import { addUser, checkUserExists } from "~/plugins/firebase-firestore";
-import { firebase } from "~/plugins/firebase";
-
-let auth = null;
-
-export default () => {
-    firebase().then(() => {
-        auth = getAuth();
-    });
-};
+import { auth } from "~/plugins/firebase";
 
 export const login = async () => {
     const provider = new GoogleAuthProvider();

@@ -27,7 +27,6 @@ self.addEventListener(
   "push",
   function (event) {
     let message = event.data.json();
-    console.log("event:push", message);
     let messageTitle = message.notification.title;
     let messageBody = message.notification.body;
     let tag = "cuppa";
@@ -65,8 +64,8 @@ const sendMessage = firebase
 // エミュレーターの設定(テスト環境用)
 if (location.hostname === "localhost") {
   console.log("emulator");
-  db.useEmulator("localhost", 8080);
-  firebase.app().functions(region).useEmulator("localhost", 5001);
+  db.useEmulator("192.168.3.19", 8080);
+  firebase.app().functions(region).useEmulator("192.168.3.19", 5001);
 }
 
 self.addEventListener("message", (event) => {
@@ -89,17 +88,12 @@ self.addEventListener("message", (event) => {
       title: event.name,
       notificationTime: event.notificationTime,
     };
-    console.log("pushData", pushData);
 
     if (dateToday !== eventDateToday && !event.isNotification) return;
 
     const notificationTimeMs = 1000 * 60 * Number(event.notificationTime); // ミリ秒に変換
     const dateTodayMs = Date.now();
     const pushTime = eventDateS - dateTodayMs - notificationTimeMs;
-    console.log("timerTime", pushTime);
-
-    console.log("sendMessage");
-    sendMessage(pushData);
 
     if (pushTime <= 0) return; // 予定の時間が現在の時間より前ならセットしない
 

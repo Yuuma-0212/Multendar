@@ -1,15 +1,8 @@
 import cookies from "js-cookie";
 import { getFirestore, doc, setDoc, getDoc, updateDoc, arrayUnion, serverTimestamp, connectFirestoreEmulator } from "firebase/firestore";
-import { firebase } from "~/plugins/firebase";
+import { db } from "~/plugins/firebase";
 
-let db = null;
 const collUsers = "users";
-
-export default () => {
-    firebase().then(() => {
-        db = getFirestore();
-    });
-}
 
 export const checkUserExists = (async (uid) => {
     const docRef = doc(db, collUsers, uid);
@@ -53,7 +46,7 @@ export const addEvent = (async (event) => {
 export const getEvents = (async (uid) => {
     const userRef = doc(db, collUsers, uid);
     const userSnap = await getDoc(userRef);
-
+    
     if (userSnap.exists()) {
         return userSnap.data().events;
     }

@@ -1,16 +1,7 @@
-import { getMessaging, getToken, isSupported } from "firebase/messaging";
-import { firebase } from "~/plugins/firebase.js";
+import { getToken, isSupported } from "firebase/messaging";
+import { initMessaging } from "~/plugins/firebase.js";
 import { setFcmToken } from "~/plugins/firebase-firestore.js";
 import getSwReg from "~/plugins/service-worker-register.js";
-import axios from "axios";
-
-let messaging = null;
-
-export default () => {
-  firebase().then(() => {
-    messaging = getMessaging();
-  });
-};
 
 export const reqNotificationPermission = async () => {
   if (!isSupported()) {
@@ -19,10 +10,10 @@ export const reqNotificationPermission = async () => {
   }
 
   const swReg = await getSwReg();
-  //const messaging = getMessaging();
   const token = await Notification.requestPermission()
     .then(async (permission) => {
       if (permission === "granted") {
+        const messaging = initMessaging();
         const getTokenOptions = {
           vapidKey: process.env.PUBLIC_VAPID_KEY,
           serviceWorkerRegistration: swReg,
@@ -31,7 +22,6 @@ export const reqNotificationPermission = async () => {
         return await getToken(messaging, getTokenOptions)
           .then(async (currentToken) => {
             if (currentToken) {
-              console.log("currentToken", currentToken);
               await setFcmToken(currentToken);
               return currentToken;
             } else {
@@ -50,7 +40,6 @@ export const reqNotificationPermission = async () => {
     .catch((error) => {
       throw new Error(error);
     });
-
-    console.log("token", token);
+    
     return token;
 };

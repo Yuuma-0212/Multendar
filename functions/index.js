@@ -1,14 +1,9 @@
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
-const { getFirestore, Firestore } = require("firebase-admin/firestore");
-const express = require("express");
-const axios = require("axios");
-//const app = express();
-
-//let serviceAccount = {};
+//const { getFirestore } = require("firebase-admin/firestore");
 
 if (!admin.apps.length) {
-  const serviceAccount = require("./weather-schedule-66b14-firebase-adminsdk-03da8-cd09df0bd8.json");
+  const serviceAccount = require("./weather-schedule-66b14-firebase-adminsdk-03da8-ddad982d54.json");
 
   admin.initializeApp({
     projectId: "weather-schedule-66b14",
@@ -18,52 +13,26 @@ if (!admin.apps.length) {
 }
 
 const region = "asia-northeast1";
-const db = getFirestore();
+const db = admin.firestore();
 const collUsers = "users";
 
-exports.getEvents = functions
-  .region(region)
-  .https.onCall(async (data, context) => {
-    const notificationData = await db
-      .collection(collUsers)
-      .doc(data.uid)
-      .get()
-      .then((userSnap) => {
-        const isUserExists = userSnap.exists;
-        if (!isUserExists) return;
-        return {
-          events: userSnap.data().events
-        };
-      })
-      .catch((error) => {
-        throw new Error(error);
-      });
+exports.helloWorld = functions.region(region).https.onCall(async (data) => {
+  return "hello world";
+});
 
-    return notificationData;
+exports.getEvents = functions.region(region).https.onCall(async (data) => {
+  const uid = data;
+  const events = await db.collection(collUsers).doc(uid).get().then((userSnap) => {
+    const isUserExists = userSnap.exists;
+    if (isUserExists) {
+      return userSnap.data().events;
+    }
+  }).catch((error) => {
+    throw new Error(error);
   });
 
-/*
-exports.setFirebaseAdminServiceAccount = functions.region(region).https.onCall(async () => {
-    await axios.get("https://weather-scheduler-test.azurewebsites.net/api/getFirebaseAdminServiceAccount")
-        .then((res) => {
-            serviceAccount = {
-                type: res.data.FIREBASE_ADMIN_TYPE,
-                project_id: res.data.FIREBASE_ADMIN_PROJECT_ID,
-                private_key_id: res.data.FIREBASE_ADMIN_PRIVATE_KEY_ID,
-                private_key: res.data.FIREBASE_ADMIN_PRIVATE_KEY,
-                client_email: res.data.FIREBASE_ADMIN_CLIENT_EMAIL,
-                client_id: res.data.FIREBASE_ADMIN_CLIENT_ID,
-                auth_uri: res.data.FIREBASE_ADMIN_AUTH_URI,
-                token_uri: res.data.FIREBASE_ADMIN_TOKEN_URI,
-                auth_provider_x509_cert_url: res.data.FIREBASE_ADMIN_AUTH_PROVIDER_X509_CERT_URL,
-                client_x509_cert_url: res.data.FIREBASE_ADMIN_CLIENT_X509_CERT_URL
-            };
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+  return events;
 });
-*/
 
 exports.sendMessage = functions.region(region).https.onCall(async (data) => {
   const fcmToken = data.fcmToken;
@@ -85,28 +54,3 @@ exports.sendMessage = functions.region(region).https.onCall(async (data) => {
 
   await admin.messaging().send(message);
 });
-
-/*
-app.get("/setFirebaseAdminEnv", async (req, res) => {
-    await axios.get("https://weather-scheduler-test.azurewebsites.net/api/getFirebaseAdminServiceAccount")
-        .then((res) => {
-            serviceAccount = {
-                type: res.data.FIREBASE_ADMIN_TYPE,
-                project_id: res.data.FIREBASE_ADMIN_PROJECT_ID,
-                private_key_id: res.data.FIREBASE_ADMIN_PRIVATE_KEY_ID,
-                private_key: res.data.FIREBASE_ADMIN_PRIVATE_KEY,
-                client_email: res.data.FIREBASE_ADMIN_CLIENT_EMAIL,
-                client_id: res.data.FIREBASE_ADMIN_CLIENT_ID,
-                auth_uri: res.data.FIREBASE_ADMIN_AUTH_URI,
-                token_uri: res.data.FIREBASE_ADMIN_TOKEN_URI,
-                auth_provider_x509_cert_url: res.data.FIREBASE_ADMIN_AUTH_PROVIDER_X509_CERT_URL,
-                client_x509_cert_url: res.data.FIREBASE_ADMIN_CLIENT_X509_CERT_URL
-            };
-        })
-        .catch((error) => {
-            console.log(error);
-        });
-});
-
-exports.api = functions.region(region).https.onRequest(app);
-*/
