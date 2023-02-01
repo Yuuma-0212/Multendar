@@ -28,6 +28,7 @@ export default ({ req }) => {
   db = getFirestore();
 
   // テスト環境用
+  /*
   if ((process.client && window.location.hostname === "localhost")) {
     console.log("Firebase Emulatorを起動中");
 
@@ -35,6 +36,7 @@ export default ({ req }) => {
     connectFunctionsEmulator(functions, '192.168.3.19', 5001);
     connectFirestoreEmulator(db, '192.168.3.19', 8080);
   }
+  */
 }
 
 export const initMessaging = () => {
