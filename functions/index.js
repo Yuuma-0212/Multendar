@@ -50,6 +50,7 @@ exports.sendMessage = functions.region(region).https.onCall(async (data) => {
         link: webPushLink,
       },
     },
+    priority: "high"
   };
 
   await admin.messaging().send(message);
