@@ -328,7 +328,6 @@
         <v-scroll-x-transition :hide-on-leave="true">
           <li class="tabs__item" v-show="isActiveNum === '3'">
             <Contact />
-            <v-btn @click="hello('hello world')">test</v-btn>
           </li>
         </v-scroll-x-transition>
       </ul>
@@ -458,17 +457,6 @@ export default {
     this.areas = areas;
   },
   methods: {
-    hello(text) {
-      const uid = this.$cookies.get("uid");
-      const ctrl = navigator.serviceWorker.controller;
-      const message = {
-        type: "data",
-        payload: {
-          uid: uid,
-        },
-      };
-      ctrl.postMessage(message);
-    },
     viewDay(date) {
       this.focus = date;
       this.type = "day";

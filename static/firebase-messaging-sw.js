@@ -29,13 +29,11 @@ self.addEventListener(
     let message = event.data.json();
     let messageTitle = message.notification.title;
     let messageBody = message.notification.body;
-    let tag = "cuppa";
 
     const notificationPromise = self.registration.showNotification(
       messageTitle,
       {
         body: messageBody,
-        tag: tag,
       }
     );
 
@@ -45,6 +43,19 @@ self.addEventListener(
 );
 
 // WEBアプリがバックグラウンドの場合にはsetBackGroundMessageHandlerが呼び出される。
+messaging.onBackgroundMessage(messaging, (event) => {
+  console.log("backgroundMessage");
+
+  let message = event.data.json();
+  let messageTitle = message.notification.title;
+  let messageBody = message.notification.body;
+
+  return self.registration.showNotification(messageTitle,
+    {
+      body: messageBody,
+    });
+});
+/*
 messaging.onBackgroundMessage(messaging, (payload) => {
   console.log("backgroundMessage");
 
@@ -52,6 +63,7 @@ messaging.onBackgroundMessage(messaging, (payload) => {
     body: payload.body + "onBackGround",
   });
 });
+*/
 
 const region = "asia-northeast1";
 const functions = firebase.functions();

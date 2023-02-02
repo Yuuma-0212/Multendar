@@ -145,6 +145,7 @@ export default {
       "og:description": "サイトの説明",
       theme_color: "#163956",
       background_color: "#163956",
+      gcm_sender_id: process.env.FIREBASE_MESSAGING_SENDER_ID || "",
       icons: [
         {
           sizes: "512x512",
