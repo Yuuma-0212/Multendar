@@ -62,7 +62,7 @@ export const actions = {
     }
 
     // ログイン済みの場合は/calendarへリダイレクト
-    if (cookie != null && cookie.isLogin) {
+    if (cookie != undefined && cookie.isLogin) {
       dispatch("setSelectedArea", selectedArea);
       redirect("/calendar");
     } else {

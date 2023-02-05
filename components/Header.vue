@@ -29,6 +29,8 @@ export default {
     const isLogin = this.$cookies.get("isLogin");
     if (isLogin) {
       this.isLogin = true;
+    } else {
+      this.isLogin = false;
     }
   }, 
   methods: {
