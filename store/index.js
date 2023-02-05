@@ -6,8 +6,7 @@ export const state = () => ({
   uid: "",
   fcmToken: "",
   selectedArea: {},
-  events: [],
-  isLogin: false,
+  events: []
 });
 
 export const mutations = {
@@ -32,11 +31,7 @@ export const mutations = {
 
   setSelectedArea(state, selectedArea) {
     state.selectedArea = selectedArea;
-  },
-
-  setIsLogin(state, isLogin) {
-    state.isLogin = isLogin;
-  },
+  }
 };
 
 export const actions = {
@@ -88,11 +83,7 @@ export const actions = {
 
   setSelectedArea({ commit }, selectedArea) {
     commit("setSelectedArea", selectedArea);
-  },
-
-  setIsLogin({ commit }, isLogin) {
-    commit("setIsLogin", isLogin);
-  },
+  }
 };
 
 export const getters = {
@@ -114,9 +105,5 @@ export const getters = {
 
   getSelectedArea(state) {
     return state.selectedArea;
-  },
-
-  getIsLogin(state) {
-    return state.isLogin;
-  },
+  }
 };
