@@ -336,9 +336,11 @@
 </template>
 
 <script>
+import { functions } from "~/plugins/firebase.js";
 import { addEvent, getEvents } from "~/plugins/firebase-firestore.js";
 import { areas } from "~/plugins/areas.js";
 import { reqNotificationPermission } from "~/plugins/firebase-fcm.js";
+import { httpsCallable } from 'firebase/functions';
 import Contact from "~/components/Contact.vue";
 import Gmap from "~/components/Gmap.vue";
 import GmapAc from "~/components/GmapAc.vue";
@@ -650,20 +652,19 @@ export default {
       return fDate;
     },
     setNotification(fcmToken) {
+      const sendMessage = httpsCallable(functions, "sendMessage");
+      const helloWorld = httpsCallable(functions, "helloWorld");
+      console.log(helloWorld());
       // イベントの通知設定
       const events = JSON.parse(JSON.stringify(this.events));
+
       if (events.length > 0) {
-        const uid = this.$cookies.get("uid");
-        const ctrl = navigator.serviceWorker.controller;
         const notificationData = {
-          type: "data",
-          payload: {
-            uid: uid,
-            events: events,
-            fcmToken: fcmToken,
-          },
+          events: events,
+          fcmToken: fcmToken,
         };
-        ctrl.postMessage(notificationData);
+        
+        sendMessage(notificationData);
       }
     },
   },
