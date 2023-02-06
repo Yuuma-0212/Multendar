@@ -28,6 +28,9 @@ export default {
     isLogin: false
   }),
   created() {
+    // ブラウザからログイン中にインストールするとトップ画面なのにヘッダーがログアウトになるのを防ぐ
+    if (this.isLogin) this.isLogin = false;
+
     this.isLogin = this.$cookies.get("isLogin");
   },
   methods: {
