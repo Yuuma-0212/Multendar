@@ -1,5 +1,5 @@
 import { initializeApp, getApp, getApps } from "firebase/app";
-import { getFunctions, connectFunctionsEmulator, httpsCallable } from 'firebase/functions';
+import { getFunctions, connectFunctionsEmulator } from 'firebase/functions';
 import { getAuth, connectAuthEmulator } from "firebase/auth";
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 import { getMessaging } from "firebase/messaging";
@@ -8,7 +8,7 @@ export let auth = null;
 export let functions = null;
 export let db = null;
 
-export default ({ req }) => {
+export default () => {
   const firebaseConfig = {
     apiKey: process.env.FIREBASE_API_KEY,
     authDomain: process.env.FIREBASE_AUTH_DOMAIN,

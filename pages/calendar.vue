@@ -653,8 +653,6 @@ export default {
     },
     setNotification(fcmToken) {
       const sendMessage = httpsCallable(functions, "sendMessage");
-      const helloWorld = httpsCallable(functions, "helloWorld");
-      console.log(helloWorld());
       // イベントの通知設定
       const events = JSON.parse(JSON.stringify(this.events));
 

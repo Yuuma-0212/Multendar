@@ -40,6 +40,6 @@ export const reqNotificationPermission = async () => {
     .catch((error) => {
       throw new Error(error);
     });
-    
-    return token;
+
+  return token;
 };

@@ -20,6 +20,8 @@
 <script>
 import { login, logout } from "~/plugins/firebase-auth.js";
 
+// ログイン中にインストールして起動するとトップ画面なのにヘッダーのログインがログアウトになっている
+// 致命的なバグでもないので一旦放置
 export default {
   name: "Header",
   data: () => ({
@@ -27,9 +29,6 @@ export default {
   }),
   created() {
     this.isLogin = this.$cookies.get("isLogin");
-  }, 
-  mounted() {
-    alert(this.isLogin);
   },
   methods: {
     login() {
