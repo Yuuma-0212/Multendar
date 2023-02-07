@@ -27,6 +27,7 @@ self.addEventListener("push", function (event) {
 );
 
 // WEBアプリがバックグラウンドの場合にはsetBackGroundMessageHandlerが呼び出される。
+/*
 messaging.onBackgroundMessage(payload => {
   console.log('[firebase-messaging-sw.js] Received background message ', payload);
   // Customize notification here
@@ -42,3 +43,4 @@ messaging.onBackgroundMessage(payload => {
 self.addEventListener("activate", (event) => {
   event.waitUntil(self.clients.claim());
 });
+*/
