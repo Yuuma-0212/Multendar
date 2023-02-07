@@ -8,18 +8,16 @@ firebase.initializeApp(swEnv);
 const messaging = firebase.messaging();
 
 // 通知を受けとると push イベントが呼び出される。
-self.addEventListener("push", function (event) {
+self.addEventListener("push", async (event) => {
   console.log("pushMessage", event);
-  let message = event.data.json();
-  let messageTitle = message.notification.title;
-  let messageBody = message.notification.body;
+  const message = await event.data.json();
+  const notificationTitle = message.notification.title;
+  const notificationOptions = {
+    body: message.notification.body,
+    icon: "/icon_pwa.png"
+  }
 
-  const notificationPromise = self.registration.showNotification(
-    messageTitle,
-    {
-      body: messageBody,
-    }
-  );
+  const notificationPromise = self.registration.showNotification(notificationTitle, notificationOptions);
 
   event.waitUntil(notificationPromise);
 },
