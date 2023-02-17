@@ -14,7 +14,7 @@ export const checkUserExists = (async (uid) => {
 });
 
 export const addUser = ((user, idToken) => {
-    const userRef = doc(db, collUsers, user.uid); 
+    const userRef = doc(db, collUsers, user.uid);
     const userData = {
         name: user.displayName,
         email: user.email,
@@ -46,7 +46,7 @@ export const addEvent = (async (event) => {
 export const getEvents = (async (uid) => {
     const userRef = doc(db, collUsers, uid);
     const userSnap = await getDoc(userRef);
-    
+
     if (userSnap.exists()) {
         return userSnap.data().events;
     }
@@ -67,15 +67,24 @@ export const setFcmToken = (async (fcmToken) => {
     }).catch((error) => {
         throw new Error(error);
     });
-})
+});
 
 export const getFcmToken = (async (uid) => {
     console.log("uid", uid);
     const userRef = doc(db, collUsers, uid);
     const userSnap = await getDoc(userRef);
     console.log('getFcmToken', userSnap.data().fcmToken.token);
-    
+
     if (userSnap.exists()) {
         return userSnap.data().fcmToken.token;
     }
-})
+});
+
+export const setTest = (() => {
+    const uid = cookies.get("uid");
+    const userRef = doc(db, collUsers, uid);
+
+    updateDoc(userRef, {
+        BeforeUnload: true
+    });
+});

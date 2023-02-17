@@ -357,7 +357,7 @@
 
 <script>
 import { functions } from "~/plugins/firebase.js";
-import { addEvent, getEvents } from "~/plugins/firebase-firestore.js";
+import { addEvent, getEvents, setTest } from "~/plugins/firebase-firestore.js";
 import { areas } from "~/plugins/areas.js";
 import { reqNotificationPermission } from "~/plugins/firebase-fcm.js";
 import { httpsCallable } from 'firebase/functions';
@@ -445,8 +445,9 @@ export default {
 
     window.addEventListener("beforeunload", e => {
       if (this.isReadEventData) {
+        setTest();
         e.preventDefault();
-        e.returnValue = "Read event data";
+        e.returnValue = "";
       }
     });
 
