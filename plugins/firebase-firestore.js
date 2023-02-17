@@ -19,7 +19,7 @@ export const addUser = ((user, idToken) => {
         name: user.displayName,
         email: user.email,
         idToken: idToken,
-        timestamp: serverTimestamp(),
+        createAt: serverTimestamp(),
     }
     setDoc(userRef, userData).then(() => {
         return;

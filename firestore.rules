@@ -1,8 +1,18 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+
+    /*
+    match /users/{userId} {
+      // ユーザー情報取得時のルール
+      allow create: if request.auth != null;
+      allow get: if request.auth != null && request.auth.uid == userId;
+    }
+    */
+
+    // デバッグ用
     match /{document=**} {
-      allow read, write: if true;
+      allow read, write: if request.auth != null;
     }
   }
 }

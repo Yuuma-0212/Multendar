@@ -123,14 +123,14 @@
                   </template>
                 </template>
               </v-calendar>
-              <v-dialog v-model="selectedOpen" :activator="selectedElement" max-width="1000px">
+              <v-dialog v-model="selectedOpenDialog" :activator="selectedElement" max-width="1000px">
                 <v-card flat min-height="80vh">
                   <v-row no-gutters>
                     <v-col class="col-12 col-md-8" order-md="2">
                       <Gmap :markers="selectedEvent.markers" />
                     </v-col>
                     <v-col class="col-12 col-md-4" order-md="1">
-                      <v-card-text>
+                      <v-card-text class="calendar__event-info">
                         <v-list>
                           <v-list-item>
                             <v-list-item-action>
@@ -166,6 +166,17 @@
                           <v-divider inset></v-divider>
                           <v-list-item>
                             <v-list-item-action>
+                              <v-icon :style="{ color: selectedEvent.color }">mdi-bell-ring-outline</v-icon>
+                            </v-list-item-action>
+                            <v-list-item-content>
+                              <v-list-item-title class="calendar__event-detail-text">
+                                {{ selectedEvent.notificationTime }}<span class="ml-1">分前に通知</span>
+                              </v-list-item-title>
+                            </v-list-item-content>
+                          </v-list-item>
+                          <v-divider inset></v-divider>
+                          <v-list-item class="calendar__event-info-list-item">
+                            <v-list-item-action>
                               <v-icon :style="{ color: selectedEvent.color }">mdi-note-outline</v-icon>
                             </v-list-item-action>
                             <v-list-item-content>
@@ -173,30 +184,39 @@
                                 v-text="selectedEvent.memo"></v-list-item-title>
                             </v-list-item-content>
                           </v-list-item>
-                          <v-divider inset></v-divider>
-                          <v-list-item>
-                            <v-list-item-action>
-                              <v-icon :style="{ color: selectedEvent.color }">mdi-bell-ring-outline</v-icon>
-                            </v-list-item-action>
-                            <v-list-item-content>
-                              <v-list-item-title class="calendar__event-detail-text">
-                                {{
-                                  selectedEvent.notificationTime
-                                }}<span class="ml-1">分前に通知</span>
-                              </v-list-item-title>
-                            </v-list-item-content>
-                          </v-list-item>
                         </v-list>
+                        <v-card-actions class="calendar__event-info-btns mt-2 d-flex align-end">
+                          <v-row justify="space-between">
+                            <v-btn text color="secondary" @click="selectedOpenDialog = false">
+                              <v-icon>mdi-chevron-left</v-icon>戻る
+                            </v-btn>
+                            <div class="pt-1 mr-2">
+                              <v-dialog v-model="eventDeleteDialog" max-width="350">
+                                <template v-slot:activator="{ on, attrs }">
+                                  <v-btn color="error" small v-bind="attrs" v-on="on">
+                                    削除
+                                  </v-btn>
+                                </template>
+                                <v-card class="d-flex flex-column align-center">
+                                  <v-card-title class="text-body-1">
+                                    本当にこのイベントを削除しますか？
+                                  </v-card-title>
+                                  <v-card-actions class="d-flex justify-end pt-0">
+                                    <v-btn color="green darken-1" text @click="eventDeleteDialog = false">
+                                      キャンセル
+                                    </v-btn>
+                                    <v-btn color="error" text @click="deleteEvent(selectedEvent.eventIndex)">
+                                      削除
+                                    </v-btn>
+                                  </v-card-actions>
+                                </v-card>
+                              </v-dialog>
+                            </div>
+                          </v-row>
+                        </v-card-actions>
                       </v-card-text>
                     </v-col>
                   </v-row>
-                  <v-card-actions class="mt-md-n10 pb-md-0 pb-8">
-                    <v-row class="pl-md-7 pb-md-7" justify="end" justify-md="start">
-                      <v-btn text color="secondary" @click="selectedOpen = false">
-                        <v-icon>mdi-chevron-left</v-icon>戻る
-                      </v-btn>
-                    </v-row>
-                  </v-card-actions>
                 </v-card>
               </v-dialog>
             </div>
@@ -361,7 +381,7 @@ export default {
     selectedEventSdate: null,
     selectedEventEdate: null,
     selectedElement: null,
-    selectedOpen: false,
+    selectedOpenDialog: false,
     events: [],
     isOpenDialogTimeS: false,
     isOpenDialogTimeE: false,
@@ -383,6 +403,8 @@ export default {
     notificationTime: "0",
     isNotification: true,
     eventColor: "#FF5252",
+    eventDeleteDialog: false,
+    eventIndex: -1,
     fcmToken: "",
     swatches: [
       "#FF5252",
@@ -411,6 +433,7 @@ export default {
     forecastWeek: {},
     forecastHour: {},
     isLoadingSelectedArea: false,
+    isReadEventData: false
   }),
   async mounted() {
     this.$refs.calendar.checkChange();
@@ -418,6 +441,13 @@ export default {
 
     window.addEventListener("resize", () => {
       this.cWindowW = window.innerWidth;
+    });
+
+    window.addEventListener("beforeunload", e => {
+      if (this.isReadEventData) {
+        e.preventDefault();
+        e.returnValue = "Read event data";
+      }
     });
 
     await reqNotificationPermission().then((fcmToken) => {
@@ -453,6 +483,15 @@ export default {
     if (events !== undefined) {
       this.events = events;
       this.$store.dispatch("setEvents", events);
+
+      // eventIndexの最後の値を取得
+      let lastEventIndex = 0;
+      this.events.forEach(event => {
+        console.log("eventCount", this.eventIndex);
+        if (event.eventIndex > lastEventIndex) lastEventIndex = event.eventIndex;
+      });
+      this.eventIndex = lastEventIndex + 1;
+      console.log("eventCounted", this.eventIndex);
     }
   },
   async created() {
@@ -508,12 +547,12 @@ export default {
         this.selectedEvent = event;
         this.selectedElement = nativeEvent.target;
         requestAnimationFrame(() =>
-          requestAnimationFrame(() => (this.selectedOpen = true))
+          requestAnimationFrame(() => (this.selectedOpenDialog = true))
         );
       };
 
-      if (this.selectedOpen) {
-        this.selectedOpen = false;
+      if (this.selectedOpenDialog) {
+        this.selectedOpenDialog = false;
         requestAnimationFrame(() => requestAnimationFrame(() => open()));
       } else {
         open();
@@ -538,13 +577,14 @@ export default {
       this.focus = date;
       this.type = "day";
     },
-    dayFormatCalendar: function (date) {
+    dayFormatCalendar(date) {
       return new Date(date.date).getDate();
     },
-    dayFormatDate: function (date) {
+    dayFormatDate(date) {
       return new Date(date).getDate();
     },
-    addSchedule: function () {
+    addSchedule() {
+      this.isReadEventData = true;
       let start = null;
       let end = null;
 
@@ -559,6 +599,9 @@ export default {
         end = new Date(this.dateE);
       }
 
+      // 初めてイベントを追加する場合
+      if (this.eventIndex === -1) this.eventIndex++;
+
       const newEvent = {
         name: this.title,
         start: start.getTime(),
@@ -570,7 +613,8 @@ export default {
         color: this.eventColor,
         memo: this.memo,
         timed: true,
-      };
+        eventIndex: this.eventIndex
+      }
 
       // 同じイベントの場合追加しない
       const eventsL = this.events.length;
@@ -580,6 +624,7 @@ export default {
         }
       }
 
+      this.eventIndex++;
       this.events.push(newEvent);
 
       addEvent(newEvent)
@@ -661,10 +706,20 @@ export default {
           events: events,
           fcmToken: fcmToken,
         };
-        
+
         sendMessage(notificationData);
       }
     },
+    deleteEvent(eventIndex) {
+      this.isReadEventData = true;
+      console.log("this.isReadEventData", this.isReadEventData);
+      console.log("delete eventIndex", eventIndex);
+      this.eventDeleteDialog = false;
+      this.selectedOpenDialog = false;
+      const deleteCount = 1;
+      this.events.splice(eventIndex, deleteCount);
+      console.log("this.events", JSON.stringify(this.events));
+    }
   },
 };
 </script>
@@ -740,7 +795,7 @@ export default {
 
   &__event-color {
     display: flex;
-    justify-content: start;
+    justify-content: flex-start;
     align-items: center;
   }
 
@@ -767,11 +822,23 @@ export default {
     font-size: 0.75rem;
   }
 
+  &__event-info {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  &__event-info-btns {
+    height: 100%;
+  }
+
   &__event-detail-text {
     @include event-detail-text(normal);
 
     &--memo {
       @include event-detail-text(pre-wrap);
+      max-height: 40vh;
+      overflow-y: auto;
     }
   }
 
