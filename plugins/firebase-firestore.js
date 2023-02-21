@@ -1,5 +1,5 @@
 import cookies from "js-cookie";
-import { doc, setDoc, getDoc, updateDoc, arrayUnion, serverTimestamp } from "firebase/firestore";
+import { doc, setDoc, getDoc, updateDoc, arrayUnion, arrayRemove, serverTimestamp } from "firebase/firestore";
 import { db } from "~/plugins/firebase";
 
 const collUsers = "users";
@@ -20,6 +20,11 @@ export const addUser = ((user, idToken) => {
         email: user.email,
         idToken: idToken,
         createAt: serverTimestamp(),
+        events: [],
+        fcmToken: {
+            createAt: serverTimestamp(),
+            token: ""
+        }
     }
     setDoc(userRef, userData).then(() => {
         return;
@@ -33,15 +38,33 @@ export const addEvent = (async (event) => {
     const userRef = doc(db, collUsers, uid);
     const eventData = {
         events: arrayUnion(event),
-        timestamp: serverTimestamp()
+        createAt: serverTimestamp()
     }
 
-    await updateDoc(userRef, eventData).then(() => {
-        return;
-    }).catch((error) => {
-        throw new Error(error);
-    });
+    await updateDoc(userRef, eventData);
 });
+
+export const deleteEvent = (async (event) => {
+    const uid = cookies.get("uid");
+    const userRef = doc(db, collUsers, uid);
+    const eventData = {
+        events: arrayRemove({
+            address: event.address,
+            color: event.color,
+            createAt: event.createAt,
+            end: event.end,
+            isNotification: event.isNotification,
+            markers: event.markers,
+            memo: event.memo,
+            name: event.name,
+            notificationTime: event.notificationTime,
+            start: event.start,
+            timed: event.timed
+        })
+    }
+
+    await updateDoc(userRef, eventData);
+})
 
 export const getEvents = (async (uid) => {
     const userRef = doc(db, collUsers, uid);
@@ -60,7 +83,7 @@ export const setFcmToken = (async (fcmToken) => {
     await updateDoc(userRef, {
         fcmToken: {
             token: fcmToken,
-            timestamp: serverTimestamp()
+            createAt: serverTimestamp()
         }
     }).then(() => {
         return;
@@ -78,13 +101,4 @@ export const getFcmToken = (async (uid) => {
     if (userSnap.exists()) {
         return userSnap.data().fcmToken.token;
     }
-});
-
-export const setTest = (() => {
-    const uid = cookies.get("uid");
-    const userRef = doc(db, collUsers, uid);
-
-    updateDoc(userRef, {
-        BeforeUnload: true
-    });
 });

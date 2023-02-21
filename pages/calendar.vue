@@ -205,7 +205,7 @@
                                     <v-btn color="green darken-1" text @click="eventDeleteDialog = false">
                                       キャンセル
                                     </v-btn>
-                                    <v-btn color="error" text @click="deleteEvent(selectedEvent.eventIndex)">
+                                    <v-btn color="error" text @click="deleteEvent(selectedEvent.createAt)">
                                       削除
                                     </v-btn>
                                   </v-card-actions>
@@ -324,8 +324,7 @@
                     <label class="form__label" for="iptNotification">通知</label>
                     <div class="calendar__input-notification">
                       <v-text-field id="iptNotification" class="text-body-2" v-model="notificationTime" type="number"
-                        max="60" min="0" outlined :dense="true" suffix="分前に通知"
-                        @change="matchNum($event)"></v-text-field>
+                        max="60" min="0" outlined :dense="true" suffix="分前に通知" @change="matchNum($event)"></v-text-field>
                     </div>
                   </div>
                   <v-col class="ml-4" align-self="center">
@@ -357,7 +356,7 @@
 
 <script>
 import { functions } from "~/plugins/firebase.js";
-import { addEvent, getEvents, setTest } from "~/plugins/firebase-firestore.js";
+import { addEvent, deleteEvent, getEvents } from "~/plugins/firebase-firestore.js";
 import { areas } from "~/plugins/areas.js";
 import { reqNotificationPermission } from "~/plugins/firebase-fcm.js";
 import { httpsCallable } from 'firebase/functions';
@@ -375,7 +374,7 @@ export default {
       month: "Month",
       week: "Week",
       day: "Day",
-      "4day": "4 Days",
+      "4day": "4 Days"
     },
     selectedEvent: {},
     selectedEventSdate: null,
@@ -404,7 +403,6 @@ export default {
     isNotification: true,
     eventColor: "#FF5252",
     eventDeleteDialog: false,
-    eventIndex: -1,
     fcmToken: "",
     swatches: [
       "#FF5252",
@@ -432,8 +430,7 @@ export default {
     isTypeWeek: false,
     forecastWeek: {},
     forecastHour: {},
-    isLoadingSelectedArea: false,
-    isReadEventData: false
+    isLoadingSelectedArea: false
   }),
   async mounted() {
     this.$refs.calendar.checkChange();
@@ -441,14 +438,6 @@ export default {
 
     window.addEventListener("resize", () => {
       this.cWindowW = window.innerWidth;
-    });
-
-    window.addEventListener("beforeunload", e => {
-      if (this.isReadEventData) {
-        setTest();
-        e.preventDefault();
-        e.returnValue = "";
-      }
     });
 
     await reqNotificationPermission().then((fcmToken) => {
@@ -484,15 +473,6 @@ export default {
     if (events !== undefined) {
       this.events = events;
       this.$store.dispatch("setEvents", events);
-
-      // eventIndexの最後の値を取得
-      let lastEventIndex = 0;
-      this.events.forEach(event => {
-        console.log("eventCount", this.eventIndex);
-        if (event.eventIndex > lastEventIndex) lastEventIndex = event.eventIndex;
-      });
-      this.eventIndex = lastEventIndex + 1;
-      console.log("eventCounted", this.eventIndex);
     }
   },
   async created() {
@@ -584,8 +564,7 @@ export default {
     dayFormatDate(date) {
       return new Date(date).getDate();
     },
-    addSchedule() {
-      this.isReadEventData = true;
+    async addSchedule() {
       let start = null;
       let end = null;
 
@@ -600,9 +579,6 @@ export default {
         end = new Date(this.dateE);
       }
 
-      // 初めてイベントを追加する場合
-      if (this.eventIndex === -1) this.eventIndex++;
-
       const newEvent = {
         name: this.title,
         start: start.getTime(),
@@ -614,7 +590,7 @@ export default {
         color: this.eventColor,
         memo: this.memo,
         timed: true,
-        eventIndex: this.eventIndex
+        createAt: new Date()
       }
 
       // 同じイベントの場合追加しない
@@ -625,10 +601,9 @@ export default {
         }
       }
 
-      this.eventIndex++;
       this.events.push(newEvent);
 
-      addEvent(newEvent)
+      await addEvent(newEvent)
         .then(() => {
           this.setNotification(this.fcmToken);
           this.$toast.success("登録が完了しました", {
@@ -636,7 +611,7 @@ export default {
           });
         })
         .catch((error) => {
-          this.$toast.error("登録に失敗しました error: " + error, {
+          this.$toast.error("登録に失敗しました " + error, {
             position: "top-right",
           });
         });
@@ -711,15 +686,33 @@ export default {
         sendMessage(notificationData);
       }
     },
-    deleteEvent(eventIndex) {
-      this.isReadEventData = true;
-      console.log("this.isReadEventData", this.isReadEventData);
-      console.log("delete eventIndex", eventIndex);
+    async deleteEvent(eventCreateDate) {
       this.eventDeleteDialog = false;
       this.selectedOpenDialog = false;
+      const eventCreateDateSec = JSON.parse(JSON.stringify(eventCreateDate)).seconds;
+      const events = JSON.parse(JSON.stringify(this.events));
+      const eventsL = this.events.length;
       const deleteCount = 1;
-      this.events.splice(eventIndex, deleteCount);
-      console.log("this.events", JSON.stringify(this.events));
+
+      // 削除するイベントを探す
+      for (let i = 0; i < eventsL; i++) {
+        if (events[i].createAt.seconds !== eventCreateDateSec) continue;
+
+        await deleteEvent(this.events[i])
+          .then(() => {
+            this.events.splice(i, deleteCount);
+            this.$toast.success("イベントが削除されました", {
+              position: "top-right",
+            });
+          })
+          .catch((error) => {
+            this.$toast.error("イベントの削除に失敗しました error: " + error, {
+              position: "top-right",
+            });
+          });
+
+        break;
+      }
     }
   },
 };
