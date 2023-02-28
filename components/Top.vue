@@ -37,12 +37,11 @@
           <li class="tabs__item" v-show="isActiveNum === '1'">
             <div>
               <h2 class="section__title--two-line">
-                <span class="section__title--sub">Weather</span><br />Scheduler
+                Multendar
               </h2>
               <div v-if="cWindowW >= sectionTextToggleW">
                 <p class="section__text">
-                  Weather
-                  Schedulerはスケジュール・天気・目的地までのマップをこのWebアプリひとつで確認することが出来ます
+                  Multendarはスケジュール・天気・目的地までのマップをこのWebアプリひとつで確認することが出来ます
                 </p>
                 <v-btn
                   class="section__btn"
@@ -61,8 +60,7 @@
             </div>
             <div v-if="cWindowW < sectionTextToggleW">
               <p class="section__text">
-                Weather
-                Schedulerはスケジュール・天気・目的地までのマップをこのWebアプリひとつで確認することが出来ます
+                Multendarはスケジュール・天気・目的地までのマップをこのWebアプリひとつで確認することが出来ます
               </p>
               <v-btn
                 class="section__btn"

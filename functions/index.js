@@ -1,20 +1,28 @@
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
+const nodemailer = require("nodemailer");
+const xoauth2 = require("xoauth2");
 //const { getFirestore } = require("firebase-admin/firestore");
 
 if (!admin.apps.length) {
-  const serviceAccount = require("./weather-schedule-66b14-firebase-adminsdk-03da8-ddad982d54.json");
+  const serviceAccount = require("./multendar-fa6e5-firebase-adminsdk-3xmw9-eaf8080015.json");
 
   admin.initializeApp({
-    projectId: "weather-schedule-66b14",
+    projectId: functions.config().admin.project_id,
     credential: admin.credential.cert(serviceAccount),
-    databaseURL: "https://weather-schedule-66b14-default-rtdb.firebaseio.com",
+    databaseURL: functions.config().firestore.database_url,
   });
 }
 
 const region = "asia-northeast1";
 const db = admin.firestore();
 const collUsers = "users";
+const gmail = {
+  user: functions.config().gmail.email,
+  clientId: functions.config().gmail.client_id,
+  clientSecret: functions.config().gmail.client_secret,
+  refreshToken: functions.config().gmail.refresh_token
+}
 
 exports.helloWorld = functions.region(region).https.onCall(async (data) => {
   return "hello world";
@@ -52,9 +60,10 @@ exports.sendMessage = functions.region(region).https.onCall(async (data) => {
 
     if (pushTime <= 0) return; // 予定の時間が現在の時間より前ならセットしない
 
-    const title = "Weather Scheduler";
+    const title = "Multendar";
     const body = `${event.notificationTime}分後にスケジュール${event.name}があります`;
-    const webPushLink = "http://localhost:3000/calendar";
+    // url.local or url.base
+    const webPushLink = functions.config().url.local + "/calendar";
     const message = {
       token: fcmToken,
       notification: {
@@ -73,4 +82,50 @@ exports.sendMessage = functions.region(region).https.onCall(async (data) => {
       admin.messaging().send(message);
     }, pushTime);
   });
+});
+
+const generator = () => {
+  const g = xoauth2.createXOAuth2Generator(gmail);
+  console.log("g", g);
+  g.on("token", token => {
+    console.log('New token for %s: %s', token.user, token.accessToken);
+  });
+  return g;
+}
+
+const mailTransport = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    xoauth2: generator()
+  }
+})
+
+const formatEmailText = data => {
+  return `お問い合わせ内容
+  メールアドレス:
+  ${data.email}
+
+  お問い合わせの種類:
+  ${data.contactType}
+
+  お問い合わせの内容:
+  ${data.contactText}
+  `;
+};
+
+exports.sendMail = functions.region(region).https.onCall(async (data) => {
+  const emailContents = {
+    //from: gmail.email,
+    to: gmail.user,
+    subject: "Multendarお問い合わせ",
+    text: formatEmailText(data)
+  }
+  console.log(emailContents);
+
+  // メール送信
+  try {
+    await mailTransport.sendMail(emailContents);
+  } catch (error) {
+    throw new functions.https.HttpsError("internal", "Email sending failed");
+  }
 });

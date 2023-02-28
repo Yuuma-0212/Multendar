@@ -1,9 +1,7 @@
 <template>
   <header class="header my-2">
     <div class="header__wrapper">
-      <h1 class="header__title">
-        <span class="header__title--sub">Weather</span> Scheduler
-      </h1>
+      <h1 class="header__title">Multendar</h1>
       <template v-if="isLogin">
         <button class="header__btn-login" button="button" @click="logout">
           Logout
@@ -93,10 +91,6 @@ export default {
     font-size: 1.6rem;
     font-weight: lighter;
     font-family: "Shrikhand";
-
-    &--sub {
-      font-size: 0.7em;
-    }
   }
 
   &__btn-login {

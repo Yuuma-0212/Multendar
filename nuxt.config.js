@@ -136,11 +136,11 @@ export default {
       appleStatusBarStyle: "black"
     },
     manifest: {
-      name: "Weather Scheduler",
+      name: "Multendar",
       lang: "ja",
-      short_name: "Weather Scheduler",
-      title: "Weather Scheduler",
-      "og:title": "Weather Scheduler",
+      short_name: "Multendar",
+      title: "Multendar",
+      "og:title": "Multendar",
       description: "サイトの説明",
       "og:description": "サイトの説明",
       theme_color: "#163956",

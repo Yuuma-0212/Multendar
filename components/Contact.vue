@@ -4,64 +4,33 @@
     <div class="section__img-outer">
       <img class="section__img" src="/img/letter.png" />
     </div>
-    <v-form class="form" v-model="valid">
+    <v-form ref="form" class="form" v-model="valid" lazy-validation>
       <div class="mb-2">
         <label class="form__label" for="e-mail">メールアドレス</label>
-        <v-text-field
-          class="mt-1"
-          v-model="eMail"
-          label="example@example.co.jp"
-          single-line
-          outlined
-          :dense="true"
-          :rule="eMailRules"
-          id="e-mail"
-        ></v-text-field>
+        <v-text-field class="mt-1" v-model="mailContents.email" label="example@example.co.jp" single-line outlined
+          :dense="true" :rules="eMailRules" id="e-mail" required></v-text-field>
       </div>
       <div class="mb-2">
         <label class="form__label">お問い合わせの種類</label>
-        <v-row>
-          <v-col col="6">
-            <v-radio-group v-model="contactType" column>
-              <v-radio label="不具合" value="不具合"></v-radio>
-              <v-radio label="ご要望" value="ご要望"></v-radio>
-            </v-radio-group>
-          </v-col>
-          <v-col col="6">
-            <v-radio-group v-model="contactType" column>
-              <v-radio label="感想" value="感想"></v-radio>
-              <v-radio label="その他" value="その他"></v-radio>
-            </v-radio-group>
-          </v-col>
-        </v-row>
-        <v-text-field
-          class="mt-1"
-          v-model="typeOtherDetail"
-          label="その他の内容"
-          single-line
-          outlined
-          :dense="true"
-        ></v-text-field>
+        <v-radio-group v-model="mailContents.contactType" row mandatory>
+          <div class="mr-5">
+            <v-radio class="mb-3" label="不具合" value="不具合"></v-radio>
+            <v-radio label="ご要望" value="ご要望"></v-radio>
+          </div>
+          <div>
+            <v-radio class="mb-3" label="感想" value="感想"></v-radio>
+            <v-radio label="その他" value="その他"></v-radio>
+          </div>
+        </v-radio-group>
+        <v-text-field class="mt-1" v-model="mailContents.typeOtherContent" label="その他の内容" single-line outlined
+          :dense="true"></v-text-field>
       </div>
       <div class="mb-2">
-        <label class="form__label" for="contactDetail"
-          >お問い合わせの内容</label
-        >
-        <v-textarea
-          id="contactDetail"
-          v-model="contactDetail"
-          single-line
-          outlined
-          :no-resize="true"
-        ></v-textarea>
-        <v-btn
-          class="section__btn"
-          color="#333333"
-          rounded
-          type="button"
-          width="180"
-          height="50"
-        >
+        <label class="form__label" for="contactText">お問い合わせ内容</label>
+        <v-textarea id="contactText" v-model="mailContents.contactText" :rules="contactTextRules" single-line outlined
+          :no-resize="true" required></v-textarea>
+        <v-btn class="section__btn" color="#333333" rounded type="button" width="180" height="50" @click="sendEmail"
+          :loading="sendMailLoading">
           送信する
         </v-btn>
       </div>
@@ -70,19 +39,49 @@
 </template>
 
 <script>
+import { httpsCallable } from 'firebase/functions';
+import { functions } from "~/plugins/firebase";
 export default {
   name: "Contact",
   data: () => ({
-    valid: "",
-    eMail: "",
-    contactType: "",
-    typeOtherDetail: "",
-    contactDetail: "",
+    valid: true,
+    sendMailLoading: false,
+    mailContents: {
+      email: "",
+      contactType: "",
+      typeOtherContent: "",
+      contactText: "",
+    },
     eMailRules: [
-      (v) => !!v || "メールアドレスを入力してください",
-      (v) => /.+@.+/.test(v) || "メールアドレスが正しくありません",
+      v => !!v || "メールアドレスを入力してください",
+      v => /.+@.+/.test(v) || "メールアドレスが正しくありません",
     ],
+    contactTextRules: [v => !!v || "お問い合わせ内容を入力してください"]
   }),
+  methods: {
+    sendEmail() {
+      if (!this.$refs.form.validate()) return;
+
+      this.sendMailLoading = true;
+      const sendMail = httpsCallable(functions, "sendMail");
+
+      sendMail(this.mailContents)
+        .then(() => {
+          this.$refs.form.reset();
+          this.$toast.success("送信完了: お問い合わせありがとうございます", {
+            position: "top-right",
+          });
+        })
+        .catch(error => {
+          this.$toast.error("送信失敗: " + error, {
+            position: "top-right",
+          });
+        })
+        .finaly(() => {
+          this.sendMailLoading = false;
+        });
+    }
+  }
 };
 </script>
 
