@@ -84,6 +84,7 @@ exports.sendMessage = functions.region(region).https.onCall(async (data) => {
   });
 });
 
+/*
 const generator = () => {
   const g = xoauth2.createXOAuth2Generator(gmail);
   console.log("g", g);
@@ -115,7 +116,7 @@ const formatEmailText = data => {
 
 exports.sendMail = functions.region(region).https.onCall(async (data) => {
   const emailContents = {
-    //from: gmail.email,
+    from: data.email,
     to: gmail.user,
     subject: "Multendarお問い合わせ",
     text: formatEmailText(data)
@@ -129,3 +130,4 @@ exports.sendMail = functions.region(region).https.onCall(async (data) => {
     throw new functions.https.HttpsError("internal", "Email sending failed");
   }
 });
+*/

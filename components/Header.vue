@@ -32,6 +32,7 @@ export default {
     login() {
       login()
         .then((user) => {
+          this.isLogin = true;
           this.$cookies.set("isLogin", true);
           this.$cookies.set("uid", user.uid);
           this.$cookies.set("idToken", user.idToken);
