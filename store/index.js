@@ -59,9 +59,9 @@ export const actions = {
     // ログイン済みの場合は/calendarへリダイレクト
     if (cookie != undefined && cookie.isLogin) {
       dispatch("setSelectedArea", selectedArea);
-      redirect("/calendar");
+      //redirect("/calendar");
     } else {
-      redirect("/");
+      //redirect("/");
     }
   },
 

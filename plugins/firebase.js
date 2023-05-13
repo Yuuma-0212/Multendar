@@ -31,9 +31,9 @@ export default () => {
   if ((process.client && window.location.hostname === "localhost")) {
     console.log("Firebase Emulatorを起動中");
 
-    connectAuthEmulator(auth, "http://192.168.3.19:9099");
-    connectFunctionsEmulator(functions, '192.168.3.19', 5001);
-    connectFirestoreEmulator(db, '192.168.3.19', 8080);
+    connectAuthEmulator(auth, "http://localhost:9099");
+    connectFunctionsEmulator(functions, 'localhost', 5001);
+    connectFirestoreEmulator(db, 'localhost', 8080);
   }
 }
 

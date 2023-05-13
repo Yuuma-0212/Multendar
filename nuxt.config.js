@@ -4,8 +4,8 @@ config();
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: '%s - weather_scheduler',
-    title: 'weather_scheduler',
+    titleTemplate: '%s - multendar',
+    title: 'multendar',
     htmlAttrs: {
       lang: 'ja'
     },
@@ -128,7 +128,7 @@ export default {
 
   pwa: {
     icon: {
-      fileName: "icon_pwa.png"
+      fileName: "site_icon.jpg"
     },
     meta: {
       mobileApp: true,
@@ -147,6 +147,7 @@ export default {
       background_color: "#163956",
       icons: [
         {
+          src: "~/static/site_icon.jpg",
           sizes: "512x512",
           type: "image/png"
         }
@@ -159,28 +160,6 @@ export default {
       importScripts: [
         "firebase-messaging-sw.js"
       ]
-      /*
-      runtimeCaching: [
-        {
-          urlPattern: "http://localhost:8080/.*",
-          handler: "staleWhileRevalidate",
-          strategyOptions: {
-            cacheName: "host8080"
-          },
-          strategyPlugins: [
-            {
-              use: "Expiration",
-              config: {
-                maxAgeSeconds: 60,
-                cachebleResponse: {
-                  statuses: [200]
-                }
-              }
-            }
-          ]
-        }
-      ]
-      */
     }
   }
 }

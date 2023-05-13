@@ -5,10 +5,10 @@ const xoauth2 = require("xoauth2");
 //const { getFirestore } = require("firebase-admin/firestore");
 
 if (!admin.apps.length) {
-  const serviceAccount = require("./multendar-fa6e5-firebase-adminsdk-3xmw9-eaf8080015.json");
+  const serviceAccount = require("./multendar-fa6e5-firebase-adminsdk-3xmw9-ac6842cf3f.json");
 
   admin.initializeApp({
-    projectId: functions.config().admin.project_id,
+    projectId: functions.config().service_account.project_id,
     credential: admin.credential.cert(serviceAccount),
     databaseURL: functions.config().firestore.database_url,
   });
