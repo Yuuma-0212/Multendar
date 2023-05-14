@@ -128,7 +128,7 @@ export default {
 
   pwa: {
     icon: {
-      fileName: "site_icon.jpg"
+      fileName: "icon_pwa.jpg"
     },
     meta: {
       mobileApp: true,
