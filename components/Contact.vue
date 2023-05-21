@@ -41,6 +41,7 @@
 <script>
 import { httpsCallable } from 'firebase/functions';
 import { functions } from "~/plugins/firebase";
+
 export default {
   name: "Contact",
   data: () => ({
@@ -59,12 +60,15 @@ export default {
     contactTextRules: [v => !!v || "お問い合わせ内容を入力してください"]
   }),
   methods: {
-    sendEmail() {
+    async sendEmail() {
       if (!this.$refs.form.validate()) return;
 
       this.sendMailLoading = true;
-      const sendMail = httpsCallable(functions, "sendMail");
 
+      const sendMail = httpsCallable(functions, "sendMail");
+      await sendMail(this.mailContents);
+
+      /*
       sendMail(this.mailContents)
         .then(() => {
           this.$refs.form.reset();
@@ -80,6 +84,7 @@ export default {
         .finaly(() => {
           this.sendMailLoading = false;
         });
+        */
     }
   }
 };

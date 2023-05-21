@@ -9,7 +9,7 @@
       </h1>
       <h1 class="error-page__title" v-else>
         <div class="error-page__img-error-outer">
-          <img class="img-error" src="/img/error.png">
+          <img class="error-page__img-error" src="/img/error.png">
         </div>
         {{ otherError }}
       </h1>

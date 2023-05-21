@@ -113,21 +113,37 @@ const formatEmailText = data => {
   ${data.contactText}
   `;
 };
+*/
 
 exports.sendMail = functions.region(region).https.onCall(async (data) => {
-  const emailContents = {
-    from: data.email,
-    to: gmail.user,
-    subject: "Multendarお問い合わせ",
-    text: formatEmailText(data)
+  const siteEmail = functions.config().gmail.email;
+  const options = {
+    host: functions.config().smtp.host,
+    port: functions.config().smtp.port,
+    secure: false,
+    requireTLS: false,
+    auth: {
+      user: siteEmail,
+      pass: functions.config().smtp.pass
+    }
   }
-  console.log(emailContents);
+
+  const mail = {
+    from: data.email,
+    to: siteEmail,
+    subject: data.contactType + data.typeOtherContent,
+    text: data.contactText
+  }
+
+  console.log("mailContents: ", mail);
 
   // メール送信
   try {
-    await mailTransport.sendMail(emailContents);
-  } catch (error) {
-    throw new functions.https.HttpsError("internal", "Email sending failed");
+    const transport = nodemailer.createTransport(options);
+    await transport.sendMail(mail).then(value => {
+      console.log("send: ", value);
+    });
+  } catch (err) {
+    console.log("Email sending error!!: ", err);
   }
 });
-*/
