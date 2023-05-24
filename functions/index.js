@@ -118,21 +118,33 @@ const formatEmailText = data => {
 exports.sendMail = functions.region(region).https.onCall(async (data) => {
   const siteEmail = functions.config().gmail.email;
   const options = {
-    host: functions.config().smtp.host,
-    port: functions.config().smtp.port,
-    secure: false,
-    requireTLS: false,
+    service: "Gmail",
+    secure: true,
     auth: {
       user: siteEmail,
-      pass: functions.config().smtp.pass
+      pass: functions.config().gmail.pass
     }
   }
+  const text = `
+  お問い合わせ内容
 
+  メールアドレス
+  ${data.email}
+
+  お問い合わせの種類
+  ${data.contactType}
+
+  その他内容
+  ${data.typeOtherContent}
+
+  内容
+  ${data.contactText}
+  `;
   const mail = {
-    from: data.email,
+    from: siteEmail,
     to: siteEmail,
-    subject: data.contactType + data.typeOtherContent,
-    text: data.contactText
+    subject: "【Multender】お問い合わせ",
+    text: text
   }
 
   console.log("mailContents: ", mail);

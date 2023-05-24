@@ -66,25 +66,18 @@ export default {
       this.sendMailLoading = true;
 
       const sendMail = httpsCallable(functions, "sendMail");
-      await sendMail(this.mailContents);
-
-      /*
-      sendMail(this.mailContents)
-        .then(() => {
-          this.$refs.form.reset();
-          this.$toast.success("送信完了: お問い合わせありがとうございます", {
-            position: "top-right",
-          });
-        })
+      await sendMail(this.mailContents).then(() => {
+        this.$refs.form.reset();
+        this.$toast.success("送信完了: お問い合わせありがとうございます", {
+          position: "top-right",
+        });
+        this.sendMailLoading = false;
+      })
         .catch(error => {
           this.$toast.error("送信失敗: " + error, {
             position: "top-right",
           });
         })
-        .finaly(() => {
-          this.sendMailLoading = false;
-        });
-        */
     }
   }
 };
