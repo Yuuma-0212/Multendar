@@ -84,37 +84,6 @@ exports.sendMessage = functions.region(region).https.onCall(async (data) => {
   });
 });
 
-/*
-const generator = () => {
-  const g = xoauth2.createXOAuth2Generator(gmail);
-  console.log("g", g);
-  g.on("token", token => {
-    console.log('New token for %s: %s', token.user, token.accessToken);
-  });
-  return g;
-}
-
-const mailTransport = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    xoauth2: generator()
-  }
-})
-
-const formatEmailText = data => {
-  return `お問い合わせ内容
-  メールアドレス:
-  ${data.email}
-
-  お問い合わせの種類:
-  ${data.contactType}
-
-  お問い合わせの内容:
-  ${data.contactText}
-  `;
-};
-*/
-
 exports.sendMail = functions.region(region).https.onCall(async (data) => {
   const siteEmail = functions.config().gmail.email;
   const options = {

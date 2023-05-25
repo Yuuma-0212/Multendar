@@ -97,6 +97,7 @@ multendar-fa6e5-firebase-adminsdk-3xmw9-ac6842cf3f.json
 
 # Service worker firebase apis
 sw-env.js
+sw-env-build.js
 
 # firebase functions local config
 .runtimeconfig.json

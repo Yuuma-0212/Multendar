@@ -79,13 +79,6 @@ export default {
     baseURL: process.env.BASE_URL
   },
 
-  /*
-  server: {
-    host: '0.0.0.0',
-    port: 3000
-  },
-  */
-
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
     customVariables: ['~/assets/scss/variables.scss'],
@@ -141,8 +134,8 @@ export default {
       short_name: "Multendar",
       title: "Multendar",
       "og:title": "Multendar",
-      description: "サイトの説明",
-      "og:description": "サイトの説明",
+      description: "Multendarは予定場所・１週間の天気・気温がまとめて確認できるスケジュールWebアプリです！",
+      "og:description": "Multendarは予定場所・１週間の天気・気温がまとめて確認できるスケジュールWebアプリです！",
       theme_color: "#163956",
       background_color: "#163956",
       icons: [
