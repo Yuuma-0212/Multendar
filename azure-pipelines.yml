@@ -27,6 +27,7 @@ steps:
     MAPS_API_KEY: $(MAPS_API_KEY)
     PUBLIC_VAPID_KEY: $(PUBLIC_VAPID_KEY)
     BROWSER_BASE_URL: $(BROWSER_BASE_URL)
+    BASE_URL: $(BASE_URL)
 
 - script: |
     npm install
