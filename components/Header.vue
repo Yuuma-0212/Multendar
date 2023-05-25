@@ -8,15 +8,21 @@
         </button>
       </template>
       <template v-else>
-        <button class="header__btn-login" button="button" @click="login">
-          Login
-        </button>
+        <div class="d-flex justify-center flex-column">
+          <button class="header__btn-login" button="button" @click="login">
+            Login
+          </button>
+          <br>
+          <button class="header__btn-login-guest" button="button" @click="loginGuest">
+            ゲストログイン
+          </button>
+        </div>
       </template>
     </div>
   </header>
 </template>
 <script>
-import { login, logout } from "~/plugins/firebase-auth.js";
+import { login, loginGuest, logout } from "~/plugins/firebase-auth.js";
 
 // ログイン中にインストールして起動するとトップ画面なのにヘッダーのログインがログアウトになっている
 // 致命的なバグでもないので一旦放置
@@ -47,7 +53,23 @@ export default {
           });
         });
     },
-
+    loginGuest() {
+      loginGuest()
+        .then(() => {
+          this.isLogin = true;
+          this.$cookies.set("isLogin", true);
+          this.$cookies.set("uid", "guest");
+          this.$router.push({ path: "/calendar" });
+          this.$toast.success("ログインしました。ようこそ！", {
+            position: "top-right",
+          });
+        })
+        .catch((error) => {
+          this.$toast.error("ログインに失敗しました: " + error, {
+            position: "top-right",
+          });
+        });
+    },
     logout() {
       logout()
         .then(() => {
@@ -83,6 +105,7 @@ export default {
   &__wrapper {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     width: 100%;
     padding: 15px 7px 5px 5px;
   }
@@ -101,12 +124,17 @@ export default {
     font-family: "Shrikhand";
   }
 
+  &__btn-login-guest {
+    font-size: 0.6rem;
+    margin-top: -8px;
+  }
+
   @media #{map-get($display-breakpoints, 'md-and-up')} {
     margin: 0 60px;
 
     &__title {
       width: auto;
-      margin-top: 20px;
+      //margin-top: 20px;
 
       &--sub {
         font-size: 1em;

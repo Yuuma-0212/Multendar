@@ -430,7 +430,8 @@ export default {
     isTypeWeek: false,
     forecastWeek: {},
     forecastHour: {},
-    isLoadingSelectedArea: false
+    isLoadingSelectedArea: false,
+    isGuest: false
   }),
   async mounted() {
     this.$refs.calendar.checkChange();
@@ -440,11 +441,19 @@ export default {
       this.cWindowW = window.innerWidth;
     });
 
-    await reqNotificationPermission().then((fcmToken) => {
-      console.log("fcmToken", fcmToken);
-      this.fcmToken = fcmToken;
-      this.setNotification(this.fcmToken);
-    });
+    const uid = this.$cookies.get("uid");
+    if (uid === "guest") {
+      this.isGuest = true;
+      return;
+    }
+
+    if (!this.isGuest) {
+      await reqNotificationPermission().then((fcmToken) => {
+        console.log("fcmToken", fcmToken);
+        this.fcmToken = fcmToken;
+        this.setNotification(this.fcmToken);
+      });
+    }
 
     // 天気予報を取得
     const selectedArea = JSON.parse(
@@ -468,7 +477,6 @@ export default {
     this.dateToday = dateToday;
 
     // イベントの表示処理
-    const uid = this.$cookies.get("uid");
     const events = await getEvents(uid);
     if (events !== undefined) {
       this.events = events;
@@ -603,6 +611,14 @@ export default {
 
       this.events.push(newEvent);
 
+      if (this.isGuest) {
+        this.$toast.success("登録が完了しました", {
+          position: "top-right",
+        });
+
+        return;
+      }
+
       await addEvent(newEvent)
         .then(() => {
           this.setNotification(this.fcmToken);
@@ -698,18 +714,25 @@ export default {
       for (let i = 0; i < eventsL; i++) {
         if (events[i].createAt.seconds !== eventCreateDateSec) continue;
 
-        await deleteEvent(this.events[i])
-          .then(() => {
-            this.events.splice(i, deleteCount);
-            this.$toast.success("イベントが削除されました", {
-              position: "top-right",
-            });
-          })
-          .catch((error) => {
-            this.$toast.error("イベントの削除に失敗しました error: " + error, {
-              position: "top-right",
-            });
+        if (this.isGuest) {
+          this.events.splice(i, deleteCount);
+          this.$toast.success("イベントが削除されました", {
+            position: "top-right",
           });
+        } else {
+          await deleteEvent(this.events[i])
+            .then(() => {
+              this.events.splice(i, deleteCount);
+              this.$toast.success("イベントが削除されました", {
+                position: "top-right",
+              });
+            })
+            .catch((error) => {
+              this.$toast.error("イベントの削除に失敗しました error: " + error, {
+                position: "top-right",
+              });
+            });
+        }
 
         break;
       }
